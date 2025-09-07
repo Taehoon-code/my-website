@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>검색 - 그립</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #1a1a1a;
+          line-height: 1.5;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #ffffff;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          height: 60px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 12px;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .header-left {
+          display: flex;
+          align-items: center;
+      }
+      
+      .back-button {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          transition: all 0.2s;
+      }
+      
+      .back-button:hover,
+      .back-button.hovered {
+          background: #f8f9fa;
+      }
+      
+      .back-icon {
+          width: 20px;
+          height: 20px;
+          color: #333;
+      }
+      
+      .search-container {
+          flex: 1;
+          margin: 0 12px;
+          position: relative;
+      }
+      
+      .search-input {
+          width: 100%;
+          height: 40px;
+          background: #f8f9fa;
+          border: 1px solid #e0e0e0;
+          border-radius: 20px;
+          padding: 0 16px 0 44px;
+          font-size: 14px;
+          color: #333;
+          outline: none;
+          transition: all 0.2s;
+      }
+      
+      .search-input:focus,
+      .search-input.focused {
+          border-color: #8b5cf6;
+          background: #ffffff;
+          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+      }
+      
+      .search-input::placeholder {
+          color: #999;
+      }
+      
+      .search-icon {
+          position: absolute;
+          left: 16px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 16px;
+          height: 16px;
+          color: #666;
+          pointer-events: none;
+      }
+      
+      .clear-btn {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          background: #ccc;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: none;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+      }
+      
+      .clear-btn.visible {
+          display: flex;
+      }
+      
+      .clear-btn:hover,
+      .clear-btn.hovered {
+          background: #999;
+      }
+      
+      .clear-icon {
+          width: 12px;
+          height: 12px;
+          color: white;
+      }
+      
+      .cancel-btn {
+          color: #8b5cf6;
+          font-size: 14px;
+          font-weight: 500;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 8px;
+          transition: all 0.2s;
+      }
+      
+      .cancel-btn:hover,
+      .cancel-btn.hovered {
+          color: #7c3aed;
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 60px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== ROW: RECENT SEARCHES ===== */
+      .recent-searches-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .section-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 16px;
+      }
+      
+      .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+      }
+      
+      .clear-all-btn {
+          font-size: 12px;
+          color: #666;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          transition: all 0.2s;
+      }
+      
+      .clear-all-btn:hover,
+      .clear-all-btn.hovered {
+          color: #333;
+      }
+      
+      .recent-list {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+      }
+      
+      .recent-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 8px 0;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+      
+      .recent-item:hover,
+      .recent-item.hovered {
+          color: #8b5cf6;
+      }
+      
+      .recent-content {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex: 1;
+      }
+      
+      .recent-icon {
+          width: 16px;
+          height: 16px;
+          color: #999;
+      }
+      
+      .recent-text {
+          font-size: 14px;
+          color: #333;
+      }
+      
+      .remove-btn {
+          width: 20px;
+          height: 20px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.2s;
+      }
+      
+      .remove-btn:hover,
+      .remove-btn.hovered {
+          background: #f0f0f0;
+      }
+      
+      .remove-icon {
+          width: 12px;
+          height: 12px;
+          color: #999;
+      }
+      
+      /* ===== ROW: TRENDING KEYWORDS ===== */
+      .trending-keywords-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .trending-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+      }
+      
+      .trending-item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          cursor: pointer;
+          padding: 8px 0;
+          transition: all 0.2s;
+      }
+      
+      .trending-item:hover,
+      .trending-item.hovered {
+          color: #8b5cf6;
+      }
+      
+      .trending-rank {
+          width: 20px;
+          height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          font-weight: 700;
+          color: #666;
+          flex-shrink: 0;
+      }
+      
+      .trending-rank.top3 {
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          color: white;
+          border-radius: 50%;
+      }
+      
+      .trending-content {
+          flex: 1;
+      }
+      
+      .trending-keyword {
+          font-size: 14px;
+          font-weight: 500;
+          color: #333;
+          margin-bottom: 2px;
+      }
+      
+      .trending-tag {
+          font-size: 11px;
+          color: #666;
+      }
+      
+      .trending-change {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          font-size: 11px;
+          font-weight: 600;
+      }
+      
+      .trending-change.up {
+          color: #ff4757;
+      }
+      
+      .trending-change.down {
+          color: #3742fa;
+      }
+      
+      .trending-change.new {
+          color: #2ed573;
+      }
+      
+      .change-icon {
+          width: 10px;
+          height: 10px;
+      }
+      
+      /* ===== ROW: RECOMMENDED GRIPPERS ===== */
+      .recommended-grippers-row {
+          background: #ffffff;
+          padding: 20px 12px;
+      }
+      
+      .grippers-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+      }
+      
+      .gripper-card {
+          background: #ffffff;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          padding: 16px;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      
+      .gripper-card:hover,
+      .gripper-card.hovered {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+          border-color: #8b5cf6;
+      }
+      
+      .gripper-card.pressed {
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+      
+      .gripper-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
+      }
+      
+      .gripper-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 700;
+          color: white;
+          flex-shrink: 0;
+      }
+      
+      .gripper-info {
+          flex: 1;
+      }
+      
+      .gripper-name {
+          font-size: 14px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 2px;
+      }
+      
+      .gripper-category {
+          font-size: 11px;
+          color: #666;
+      }
+      
+      .gripper-stats {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+      }
+      
+      .follower-count {
+          font-size: 12px;
+          color: #666;
+      }
+      
+      .follow-btn {
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          color: white;
+          border: none;
+          border-radius: 12px;
+          padding: 6px 12px;
+          font-size: 11px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+      }
+      
+      .follow-btn:hover,
+      .follow-btn.hovered {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      }
+      
+      .follow-btn.following {
+          background: #f0f0f0;
+          color: #666;
+          box-shadow: none;
+      }
+      
+      .follow-btn.following:hover,
+      .follow-btn.following.hovered {
+          background: #e0e0e0;
+          transform: none;
+          box-shadow: none;
+      }
+      
+      /* ===== EMPTY STATE ===== */
+      .empty-state {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 60px 20px;
+          text-align: center;
+      }
+      
+      .empty-icon {
+          width: 60px;
+          height: 60px;
+          color: #ccc;
+          margin-bottom: 16px;
+      }
+      
+      .empty-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #666;
+          margin-bottom: 8px;
+      }
+      
+      .empty-description {
+          font-size: 14px;
+          color: #999;
+          line-height: 1.4;
+      }
+      
+      /* ===== STATE CLASSES ===== */
+      .loading {
+          opacity: 0.6;
+          pointer-events: none;
+      }
+      
+      .disabled {
+          opacity: 0.4;
+          pointer-events: none;
+      }
+      
+      .selected {
+          background: rgba(139, 92, 246, 0.1);
+          border-color: #8b5cf6;
+      }
+      
+      .error {
+          border-color: #ff4757;
+          box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+      }
+      
+      .success {
+          border-color: #2ed573;
+          box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.2);
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 0 48px;
+          }
+          
+          .recent-searches-row {
+              padding: 20px 48px;
+          }
+          
+          .trending-keywords-row {
+              padding: 20px 48px;
+          }
+          
+          .recommended-grippers-row {
+              padding: 20px 48px;
+          }
+          
+          .grippers-grid {
+              grid-template-columns: repeat(3, 1fr);
+              gap: 20px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+      <!-- Fixed Header -->
+      <header>
+          <div class="header-left">
+              <button class="back-button">
+                  <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path>
+                  </svg>
+              </button>
+          </div>
+          
+          <div class="search-container">
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35"/>
+              </svg>
+              <input type="text" class="search-input" placeholder="상품, 브랜드, 그리퍼를 검색해보세요">
+              <button class="clear-btn">
+                  <svg class="clear-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                  </svg>
+              </button>
+          </div>
+          
+          <button class="cancel-btn">취소</button>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Recent Searches -->
+          <div class="recent-searches-row">
+              <div class="section-header">
+                  <div class="section-title">최근 검색어</div>
+                  <button class="clear-all-btn">전체 삭제</button>
+              </div>
+              
+              <div class="recent-list">
+                  <div class="recent-item">
+                      <div class="recent-content">
+                          <svg class="recent-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="3"/>
+                              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                          </svg>
+                          <span class="recent-text">여름 원피스</span>
+                      </div>
+                      <button class="remove-btn">
+                          <svg class="remove-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M18 6L6 18M6 6l12 12"/>
+                          </svg>
+                      </button>
+                  </div>
+                  
+                  <div class="recent-item">
+                      <div class="recent-content">
+                          <svg class="recent-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="3"/>
+                              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                          </svg>
+                          <span class="recent-text">스니커즈</span>
+                      </div>
+                      <button class="remove-btn">
+                          <svg class="remove-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M18 6L6 18M6 6l12 12"/>
+                          </svg>
+                      </button>
+                  </div>
+                  
+                  <div class="recent-item">
+                      <div class="recent-content">
+                          <svg class="recent-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="3"/>
+                              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                          </svg>
+                          <span class="recent-text">마녀옷장</span>
+                      </div>
+                      <button class="remove-btn">
+                          <svg class="remove-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M18 6L6 18M6 6l12 12"/>
+                          </svg>
+                      </button>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Trending Keywords -->
+          <div class="trending-keywords-row">
+              <div class="section-header">
+                  <div class="section-title">인기 검색어</div>
+              </div>
+              
+              <div class="trending-list">
+                  <div class="trending-item">
+                      <div class="trending-rank top3">1</div>
+                      <div class="trending-content">
+                          <div class="trending-keyword">여름 원피스</div>
+                          <div class="trending-tag">#패션 #여성의류</div>
+                      </div>
+                      <div class="trending-change up">
+                          <svg class="change-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M7 14l5-5 5 5z"/>
+                          </svg>
+                          <span>2</span>
+                      </div>
+                  </div>
+                  
+                  <div class="trending-item">
+                      <div class="trending-rank top3">2</div>
+                      <div class="trending-content">
+                          <div class="trending-keyword">에어컨</div>
+                          <div class="trending-tag">#가전 #여름필수</div>
+                      </div>
+                      <div class="trending-change down">
+                          <svg class="change-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M7 10l5 5 5-5z"/>
+                          </svg>
+                          <span>1</span>
+                      </div>
+                  </div>
+                  
+                  <div class="trending-item">
+                      <div class="trending-rank top3">3</div>
+                      <div class="trending-content">
+                          <div class="trending-keyword">선크림</div>
+                          <div class="trending-tag">#뷰티 #자외선차단</div>
+                      </div>
+                      <div class="trending-change new">
+                          <span>NEW</span>
+                      </div>
+                  </div>
+                  
+                  <div class="trending-item">
+                      <div class="trending-rank">4</div>
+                      <div class="trending-content">
+                          <div class="trending-keyword">샌들</div>
+                          <div class="trending-tag">#신발 #여름신발</div>
+                      </div>
+                      <div class="trending-change up">
+                          <svg class="change-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M7 14l5-5 5 5z"/>
+                          </svg>
+                          <span>3</span>
+                      </div>
+                  </div>
+                  
+                  <div class="trending-item">
+                      <div class="trending-rank">5</div>
+                      <div class="trending-content">
+                          <div class="trending-keyword">수영복</div>
+                          <div class="trending-tag">#스포츠 #수영</div>
+                      </div>
+                      <div class="trending-change up">
+                          <svg class="change-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M7 14l5-5 5 5z"/>
+                          </svg>
+                          <span>1</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Recommended Grippers -->
+          <div class="recommended-grippers-row">
+              <div class="section-header">
+                  <div class="section-title">추천 그리퍼</div>
+              </div>
+              
+              <div class="grippers-grid">
+                  <div class="gripper-card">
+                      <div class="gripper-header">
+                          <div class="gripper-avatar">마</div>
+                          <div class="gripper-info">
+                              <div class="gripper-name">마녀옷장</div>
+                              <div class="gripper-category">패션 · 뷰티</div>
+                          </div>
+                      </div>
+                      <div class="gripper-stats">
+                          <span class="follower-count">팔로워 54.2K</span>
+                          <button class="follow-btn">팔로우</button>
+                      </div>
+                  </div>
+                  
+                  <div class="gripper-card">
+                      <div class="gripper-header">
+                          <div class="gripper-avatar">패</div>
+                          <div class="gripper-info">
+                              <div class="gripper-name">패션마스터</div>
+                              <div class="gripper-category">패션</div>
+                          </div>
+                      </div>
+                      <div class="gripper-stats">
+                          <span class="follower-count">팔로워 32.1K</span>
+                          <button class="follow-btn following">팔로잉</button>
+                      </div>
+                  </div>
+                  
+                  <div class="gripper-card">
+                      <div class="gripper-header">
+                          <div class="gripper-avatar">뷰</div>
+                          <div class="gripper-info">
+                              <div class="gripper-name">뷰티구루</div>
+                              <div class="gripper-category">뷰티</div>
+                          </div>
+                      </div>
+                      <div class="gripper-stats">
+                          <span class="follower-count">팔로워 28.7K</span>
+                          <button class="follow-btn">팔로우</button>
+                      </div>
+                  </div>
+                  
+                  <div class="gripper-card">
+                      <div class="gripper-header">
+                          <div class="gripper-avatar">쿠</div>
+                          <div class="gripper-info">
+                              <div class="gripper-name">쿠킹셰프</div>
+                              <div class="gripper-category">요리 · 식품</div>
+                          </div>
+                      </div>
+                      <div class="gripper-stats">
+                          <span class="follower-count">팔로워 19.3K</span>
+                          <button class="follow-btn">팔로우</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+</body>
+</html>

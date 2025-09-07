@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko" class="notranslate" translate="no">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+    <title>1,000만이 선택한 영상 쇼핑, 그립</title>
+    <meta name="description" content="영상으로 만나는 패션&라이프 쇼핑">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <style>
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        /* Layout Container */
+        .root-layout {
+            display: flex;
+            min-height: 100vh;
+            max-width: 768px;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+        
+        /* Sidebar */
+        .company-info-container {
+            display: none;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            min-width: 375px;
+        }
+        
+        /* Header */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            height: 56px;
+        }
+        
+        .page-header.white {
+            background-color: #ffffff;
+            color: #333;
+        }
+        
+        .back-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .back-icon svg {
+            width: 24px;
+            height: 24px;
+            color: #333;
+        }
+        
+        .title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Cart Page */
+        .cart-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f8f9fa;
+        }
+        
+        .cart-page-header {
+            background-color: #ffffff;
+        }
+        
+        /* Cart Content */
+        .cart-content {
+            flex: 1;
+            padding: 16px;
+        }
+        
+        .row {
+            margin-bottom: 16px;
+        }
+        
+        .cart-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .cart-empty-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 24px;
+            opacity: 0.3;
+        }
+        
+        .cart-empty-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .cart-empty-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        
+        .cart-empty-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .cart-empty-button:hover {
+            background-color: #0056b3;
+        }
+        
+        /* Overlay Areas */
+        .overlay-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .overlay-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .overlay-behind-navbar {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+        
+        /* Responsive */
+        @media (min-width: 768px) {
+            .root-layout {
+                max-width: 768px;
+            }
+            
+            .company-info-container {
+                display: block;
+                width: 300px;
+                background-color: #f8f9fa;
+                border-right: 1px solid #e0e0e0;
+            }
+            
+            .main-content {
+                flex: 1;
+                min-width: 468px;
+            }
+        }
+        
+        /* Hidden Elements */
+        .root-video {
+            display: none;
+        }
+        
+        [hidden] {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="root-layout">
+        <!-- Company Info Sidebar (Desktop Only) -->
+        <aside class="company-info-container">
+            <!-- Sidebar content would go here for desktop -->
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Overlay Areas -->
+            <div class="overlay-area">
+                <div class="overlay-container">
+                    <div role="region" aria-label="Notifications" tabindex="-1">
+                        <!-- Notification area -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="overlay-behind-navbar">
+                <div class="overlay-banner-container">
+                    <!-- Banner overlay area -->
+                </div>
+            </div>
+            
+            <!-- Cart Page -->
+            <section class="cart-page">
+                <!-- Header Row -->
+                <div class="row">
+                    <header class="header">
+                        <div class="page-header white cart-page-header">
+                            <button class="back-icon" aria-label="뒤로가기">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fill-rule="evenodd" d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path>
+                                </svg>
+                            </button>
+                            <h1 class="title">장바구니</h1>
+                        </div>
+                    </header>
+                </div>
+                
+                <!-- Cart Content Row -->
+                <div class="row">
+                    <div class="cart-content">
+                        <!-- Empty State -->
+                        <div class="cart-empty-state">
+                            <div class="cart-empty-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
+                                </svg>
+                            </div>
+                            <h2 class="cart-empty-title">장바구니가 비어있습니다</h2>
+                            <p class="cart-empty-description">원하는 상품을 장바구니에 담아보세요</p>
+                            <button class="cart-empty-button">쇼핑 계속하기</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Hidden Video Element -->
+        <video class="root-video" autoplay playsinline muted data-visible="false" hidden></video>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>그립 - 홈</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #1a1a1a;
+          line-height: 1.5;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #ffffff;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          height: 60px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 12px;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .header-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+      
+      .logo {
+          font-size: 24px;
+          font-weight: 900;
+          color: #1a1a1a;
+          letter-spacing: -1px;
+      }
+      
+      .search-btn {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: #f8f9fa;
+          border-radius: 12px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+      }
+      
+      .search-btn:hover {
+          background: #e9ecef;
+          transform: scale(1.05);
+      }
+      
+      .search-icon {
+          width: 20px;
+          height: 20px;
+          color: #666;
+      }
+      
+      .header-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .header-btn {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 12px;
+          transition: all 0.2s;
+          position: relative;
+      }
+      
+      .header-btn:hover {
+          background: #f8f9fa;
+      }
+      
+      .header-icon {
+          width: 24px;
+          height: 24px;
+          color: #333;
+      }
+      
+      .notification-badge {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 8px;
+          height: 8px;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(255, 71, 87, 0.4);
+      }
+      
+      .cart-badge {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 16px;
+          height: 16px;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 60px;
+          padding-bottom: 100px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== ROW: HERO BANNER ===== */
+      .hero-banner-row {
+          position: relative;
+          height: 280px;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          overflow: hidden;
+      }
+      
+      .hero-content {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          color: white;
+          z-index: 10;
+      }
+      
+      .hero-title {
+          font-size: 32px;
+          font-weight: 900;
+          margin-bottom: 16px;
+          letter-spacing: -1.2px;
+          line-height: 1.2;
+      }
+      
+      .hero-subtitle {
+          font-size: 16px;
+          font-weight: 500;
+          opacity: 0.9;
+          margin-bottom: 24px;
+      }
+      
+      .hero-cta {
+          background: rgba(255, 255, 255, 0.2);
+          border: 2px solid rgba(255, 255, 255, 0.3);
+          color: white;
+          font-size: 16px;
+          font-weight: 700;
+          padding: 12px 24px;
+          border-radius: 25px;
+          cursor: pointer;
+          transition: all 0.3s;
+          backdrop-filter: blur(10px);
+      }
+      
+      .hero-cta:hover {
+          background: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
+      }
+      
+      .hero-decoration {
+          position: absolute;
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.1);
+          animation: float 6s ease-in-out infinite;
+      }
+      
+      .hero-decoration:nth-child(1) {
+          top: -100px;
+          right: -100px;
+          animation-delay: 0s;
+      }
+      
+      .hero-decoration:nth-child(2) {
+          bottom: -100px;
+          left: -100px;
+          animation-delay: 3s;
+      }
+      
+      @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-20px); }
+      }
+      
+      /* ===== ROW: CATEGORIES ===== */
+      .categories-row {
+          background: #ffffff;
+          padding: 32px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+      }
+      
+      .section-title {
+          font-size: 22px;
+          font-weight: 800;
+          color: #1a1a1a;
+          letter-spacing: -0.5px;
+      }
+      
+      .view-all-btn {
+          background: transparent;
+          border: none;
+          color: #666;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          transition: color 0.2s;
+      }
+      
+      .view-all-btn:hover {
+          color: #8b5cf6;
+      }
+      
+      .view-all-arrow {
+          width: 12px;
+          height: 12px;
+      }
+      
+      .categories-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 20px;
+      }
+      
+      .category-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-decoration: none;
+          color: inherit;
+          cursor: pointer;
+          transition: all 0.3s;
+      }
+      
+      .category-item:hover {
+          transform: translateY(-4px);
+      }
+      
+      .category-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          margin-bottom: 12px;
+          transition: all 0.3s;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      
+      .category-icon.fashion {
+          background: linear-gradient(135deg, #ff9a9e, #fecfef);
+      }
+      
+      .category-icon.beauty {
+          background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      }
+      
+      .category-icon.food {
+          background: linear-gradient(135deg, #a8edea, #fed6e3);
+      }
+      
+      .category-icon.home {
+          background: linear-gradient(135deg, #d299c2, #fef9d7);
+      }
+      
+      .category-icon.sports {
+          background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      }
+      
+      .category-icon.digital {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+      
+      .category-icon.books {
+          background: linear-gradient(135deg, #f093fb, #f5576c);
+      }
+      
+      .category-icon.kids {
+          background: linear-gradient(135deg, #4facfe, #00f2fe);
+      }
+      
+      .category-label {
+          font-size: 13px;
+          font-weight: 600;
+          color: #333;
+          text-align: center;
+      }
+      
+      /* ===== ROW: FLASH DEALS ===== */
+      .flash-deals-row {
+          background: #ffffff;
+          padding: 32px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .flash-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 24px;
+      }
+      
+      .flash-title-section {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+      
+      .flash-badge {
+          display: inline-flex;
+          align-items: center;
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          color: white;
+          font-size: 14px;
+          font-weight: 700;
+          padding: 8px 16px;
+          border-radius: 20px;
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      }
+      
+      .flash-icon {
+          width: 16px;
+          height: 16px;
+          margin-right: 6px;
+      }
+      
+      .timer {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          color: #ff4757;
+      }
+      
+      .timer-icon {
+          width: 16px;
+          height: 16px;
+      }
+      
+      .products-slider {
+          display: flex;
+          gap: 16px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding-bottom: 8px;
+      }
+      
+      .products-slider::-webkit-scrollbar {
+          display: none;
+      }
+      
+      .product-card {
+          min-width: 160px;
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s;
+          background: white;
+          flex-shrink: 0;
+      }
+      
+      .product-card:hover {
+          border-color: #8b5cf6;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+      }
+      
+      .product-image {
+          width: 100%;
+          aspect-ratio: 1;
+          position: relative;
+          overflow: hidden;
+      }
+      
+      .product-image.mango {
+          background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 40px;
+      }
+      
+      .product-image.shirt {
+          background: linear-gradient(135deg, #74b9ff, #0984e3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 40px;
+      }
+      
+      .product-image.shoes {
+          background: linear-gradient(135deg, #fd79a8, #e84393);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 40px;
+      }
+      
+      .product-image.bag {
+          background: linear-gradient(135deg, #00b894, #00a085);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 40px;
+      }
+      
+      .discount-badge {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: white;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 4px 8px;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+      }
+      
+      .product-info {
+          padding: 16px;
+      }
+      
+      .product-name {
+          font-size: 14px;
+          color: #333;
+          font-weight: 600;
+          margin-bottom: 8px;
+          line-height: 1.4;
+          height: 36px;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+      }
+      
+      .product-price {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          margin-bottom: 4px;
+      }
+      
+      .current-price {
+          font-size: 16px;
+          font-weight: 800;
+          color: #ff4757;
+          letter-spacing: -0.3px;
+      }
+      
+      .original-price {
+          font-size: 12px;
+          color: #999;
+          text-decoration: line-through;
+      }
+      
+      .product-rating {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 12px;
+          color: #666;
+      }
+      
+      .rating-stars {
+          color: #ffa500;
+      }
+      
+      /* ===== ROW: LIVE BROADCASTS ===== */
+      .live-broadcasts-row {
+          background: #ffffff;
+          padding: 32px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .live-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 24px;
+      }
+      
+      .live-title-section {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+      
+      .live-badge {
+          display: inline-flex;
+          align-items: center;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: white;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 6px 12px;
+          border-radius: 16px;
+          animation: pulse 2s infinite;
+          box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+      }
+      
+      .live-icon {
+          width: 12px;
+          height: 12px;
+          margin-right: 4px;
+      }
+      
+      @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+      }
+      
+      .broadcast-slider {
+          display: flex;
+          gap: 16px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding-bottom: 8px;
+      }
+      
+      .broadcast-slider::-webkit-scrollbar {
+          display: none;
+      }
+      
+      .broadcast-card {
+          min-width: 200px;
+          border-radius: 16px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s;
+          background: white;
+          flex-shrink: 0;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      }
+      
+      .broadcast-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      }
+      
+      .broadcast-thumbnail {
+          width: 100%;
+          height: 120px;
+          position: relative;
+          overflow: hidden;
+      }
+      
+      .broadcast-thumbnail.fashion {
+          background: linear-gradient(135deg, #ff9a9e, #fecfef);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .broadcast-thumbnail.beauty {
+          background: linear-gradient(135deg, #ffecd2, #fcb69f);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .broadcast-thumbnail.food {
+          background: linear-gradient(135deg, #a8edea, #fed6e3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .viewer-count {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          background: rgba(0, 0, 0, 0.7);
+          color: white;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 4px 8px;
+          border-radius: 12px;
+          backdrop-filter: blur(10px);
+      }
+      
+      .broadcast-info {
+          padding: 16px;
+      }
+      
+      .broadcast-title {
+          font-size: 14px;
+          color: #333;
+          font-weight: 600;
+          margin-bottom: 8px;
+          line-height: 1.4;
+          height: 36px;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+      }
+      
+      .broadcaster-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .broadcaster-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #ddd;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          color: #666;
+      }
+      
+      .broadcaster-name {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+      }
+      
+      /* ===== ROW: RECOMMENDED PRODUCTS ===== */
+      .recommended-products-row {
+          background: #ffffff;
+          padding: 32px 12px;
+      }
+      
+      .products-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+      }
+      
+      .grid-product-card {
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s;
+          background: white;
+      }
+      
+      .grid-product-card:hover {
+          border-color: #8b5cf6;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+      }
+      
+      .grid-product-image {
+          width: 100%;
+          aspect-ratio: 1;
+          position: relative;
+          overflow: hidden;
+      }
+      
+      .grid-product-image.electronics {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .grid-product-image.cosmetics {
+          background: linear-gradient(135deg, #ffecd2, #fcb69f);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .grid-product-image.books {
+          background: linear-gradient(135deg, #f093fb, #f5576c);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .grid-product-image.sports {
+          background: linear-gradient(135deg, #89f7fe, #66a6ff);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 32px;
+      }
+      
+      .wishlist-btn {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 32px;
+          height: 32px;
+          background: rgba(255, 255, 255, 0.9);
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          backdrop-filter: blur(10px);
+      }
+      
+      .wishlist-btn:hover {
+          background: rgba(255, 255, 255, 1);
+          transform: scale(1.1);
+      }
+      
+      .wishlist-icon {
+          width: 16px;
+          height: 16px;
+          color: #666;
+      }
+      
+      .wishlist-btn.active .wishlist-icon {
+          color: #ff4757;
+          fill: #ff4757;
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 0 48px;
+          }
+          
+          .hero-banner-row {
+              height: 320px;
+          }
+          
+          .hero-title {
+              font-size: 40px;
+          }
+          
+          .hero-subtitle {
+              font-size: 18px;
+          }
+          
+          .categories-row {
+              padding: 40px 48px;
+          }
+          
+          .flash-deals-row {
+              padding: 40px 48px;
+          }
+          
+          .live-broadcasts-row {
+              padding: 40px 48px;
+          }
+          
+          .recommended-products-row {
+              padding: 40px 48px;
+          }
+          
+          .categories-grid {
+              grid-template-columns: repeat(8, 1fr);
+              gap: 24px;
+          }
+          
+          .products-grid {
+              grid-template-columns: repeat(4, 1fr);
+              gap: 20px;
+          }
+          
+          .section-title {
+              font-size: 24px;
+          }
+          
+          .product-card {
+              min-width: 180px;
+          }
+          
+          .broadcast-card {
+              min-width: 240px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+      <!-- Fixed Header -->
+      <header>
+          <div class="header-left">
+              <div class="logo">그립</div>
+              <button class="search-btn">
+                  <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="8"/>
+                      <path d="m21 21-4.35-4.35"/>
+                  </svg>
+              </button>
+          </div>
+          
+          <div class="header-right">
+              <button class="header-btn">
+                  <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                      <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                  </svg>
+                  <div class="notification-badge"></div>
+              </button>
+              
+              <button class="header-btn">
+                  <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="9" cy="21" r="1"/>
+                      <circle cx="20" cy="21" r="1"/>
+                      <path d="m1 1 4 4 0 0 0 0 13 2 0 0 0 0-1 7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6H3"/>
+                  </svg>
+                  <div class="cart-badge">1</div>
+              </button>
+          </div>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Hero Banner -->
+          <div class="hero-banner-row">
+              <div class="hero-decoration"></div>
+              <div class="hero-decoration"></div>
+              <div class="hero-content">
+                  <h1 class="hero-title">새로운 쇼핑의<br>시작</h1>
+                  <p class="hero-subtitle">그립과 함께 특별한 상품을 만나보세요</p>
+                  <button class="hero-cta">지금 시작하기</button>
+              </div>
+          </div>
+          
+          <!-- Row: Categories -->
+          <div class="categories-row">
+              <div class="section-header">
+                  <h2 class="section-title">카테고리</h2>
+                  <button class="view-all-btn">
+                      전체보기
+                      <svg class="view-all-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </button>
+              </div>
+              
+              <div class="categories-grid">
+                  <a href="#" class="category-item">
+                      <div class="category-icon fashion">👗</div>
+                      <span class="category-label">패션</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon beauty">💄</div>
+                      <span class="category-label">뷰티</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon food">🍎</div>
+                      <span class="category-label">식품</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon home">🏠</div>
+                      <span class="category-label">홈·리빙</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon sports">⚽</div>
+                      <span class="category-label">스포츠</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon digital">📱</div>
+                      <span class="category-label">디지털</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon books">📚</div>
+                      <span class="category-label">도서</span>
+                  </a>
+                  
+                  <a href="#" class="category-item">
+                      <div class="category-icon kids">🧸</div>
+                      <span class="category-label">키즈</span>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Row: Flash Deals -->
+          <div class="flash-deals-row">
+              <div class="flash-header">
+                  <div class="flash-title-section">
+                      <div class="flash-badge">
+                          <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                          </svg>
+                          플래시 딜
+                      </div>
+                      <h2 class="section-title">한정 특가</h2>
+                  </div>
+                  
+                  <div class="timer">
+                      <svg class="timer-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <circle cx="12" cy="12" r="10"/>
+                          <polyline points="12,6 12,12 16,14"/>
+                      </svg>
+                      <span>02:34:56</span>
+                  </div>
+              </div>
+              
+              <div class="products-slider">
+                  <div class="product-card">
+                      <div class="product-image mango">
+                          <div class="discount-badge">67%</div>
+                          🥭
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">애플망고</div>
+                          <div class="product-price">
+                              <span class="current-price">9,900원</span>
+                              <span class="original-price">29,900원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.2 (128)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image shirt">
+                          <div class="discount-badge">45%</div>
+                          👔
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">남성 셔츠</div>
+                          <div class="product-price">
+                              <span class="current-price">24,900원</span>
+                              <span class="original-price">45,000원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★★</span>
+                              <span>4.8 (95)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image shoes">
+                          <div class="discount-badge">30%</div>
+                          👟
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">운동화</div>
+                          <div class="product-price">
+                              <span class="current-price">69,900원</span>
+                              <span class="original-price">99,900원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.5 (234)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image bag">
+                          <div class="discount-badge">50%</div>
+                          👜
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">여성 가방</div>
+                          <div class="product-price">
+                              <span class="current-price">39,900원</span>
+                              <span class="original-price">79,900원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.3 (67)</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Live Broadcasts -->
+          <div class="live-broadcasts-row">
+              <div class="live-header">
+                  <div class="live-title-section">
+                      <div class="live-badge">
+                          <svg class="live-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <circle cx="12" cy="12" r="3"/>
+                              <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                          </svg>
+                          LIVE
+                      </div>
+                      <h2 class="section-title">라이브 방송</h2>
+                  </div>
+                  
+                  <button class="view-all-btn">
+                      전체보기
+                      <svg class="view-all-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </button>
+              </div>
+              
+              <div class="broadcast-slider">
+                  <div class="broadcast-card">
+                      <div class="broadcast-thumbnail fashion">
+                          <div class="viewer-count">👁 1.2K</div>
+                          👗
+                      </div>
+                      <div class="broadcast-info">
+                          <div class="broadcast-title">패션 트렌드 쇼핑</div>
+                          <div class="broadcaster-info">
+                              <div class="broadcaster-avatar">👤</div>
+                              <span class="broadcaster-name">패션마스터</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="broadcast-card">
+                      <div class="broadcast-thumbnail beauty">
+                          <div class="viewer-count">👁 856</div>
+                          💄
+                      </div>
+                      <div class="broadcast-info">
+                          <div class="broadcast-title">뷰티 제품 리뷰</div>
+                          <div class="broadcaster-info">
+                              <div class="broadcaster-avatar">👤</div>
+                              <span class="broadcaster-name">뷰티구루</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="broadcast-card">
+                      <div class="broadcast-thumbnail food">
+                          <div class="viewer-count">👁 634</div>
+                          🍳
+                      </div>
+                      <div class="broadcast-info">
+                          <div class="broadcast-title">요리 도구 추천</div>
+                          <div class="broadcaster-info">
+                              <div class="broadcaster-avatar">👤</div>
+                              <span class="broadcaster-name">쿠킹셰프</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Recommended Products -->
+          <div class="recommended-products-row">
+              <div class="section-header">
+                  <h2 class="section-title">추천 상품</h2>
+                  <button class="view-all-btn">
+                      전체보기
+                      <svg class="view-all-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </button>
+              </div>
+              
+              <div class="products-grid">
+                  <div class="grid-product-card">
+                      <div class="grid-product-image electronics">
+                          <button class="wishlist-btn">
+                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                              </svg>
+                          </button>
+                          📱
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">스마트폰 케이스</div>
+                          <div class="product-price">
+                              <span class="current-price">15,900원</span>
+                              <span class="original-price">25,900원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.1 (89)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="grid-product-card">
+                      <div class="grid-product-image cosmetics">
+                          <button class="wishlist-btn active">
+                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                              </svg>
+                          </button>
+                          💋
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">립스틱 세트</div>
+                          <div class="product-price">
+                              <span class="current-price">32,000원</span>
+                              <span class="original-price">48,000원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★★</span>
+                              <span>4.7 (156)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="grid-product-card">
+                      <div class="grid-product-image books">
+                          <button class="wishlist-btn">
+                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                              </svg>
+                          </button>
+                          📖
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">베스트셀러 도서</div>
+                          <div class="product-price">
+                              <span class="current-price">12,600원</span>
+                              <span class="original-price">14,000원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.4 (203)</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="grid-product-card">
+                      <div class="grid-product-image sports">
+                          <button class="wishlist-btn">
+                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                              </svg>
+                          </button>
+                          🏋️
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">운동 용품 세트</div>
+                          <div class="product-price">
+                              <span class="current-price">89,000원</span>
+                              <span class="original-price">120,000원</span>
+                          </div>
+                          <div class="product-rating">
+                              <span class="rating-stars">★★★★☆</span>
+                              <span>4.3 (78)</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+</body>
+</html>

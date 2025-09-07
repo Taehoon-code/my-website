@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>상품 상세 - 그립</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #1a1a1a;
+          line-height: 1.5;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #ffffff;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          height: 60px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 12px;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .header-left {
+          display: flex;
+          align-items: center;
+      }
+      
+      .back-button {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          transition: all 0.2s;
+      }
+      
+      .back-button:hover,
+      .back-button.hovered {
+          background: #f8f9fa;
+      }
+      
+      .back-icon {
+          width: 20px;
+          height: 20px;
+          color: #333;
+      }
+      
+      .header-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .header-btn {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          transition: all 0.2s;
+          position: relative;
+      }
+      
+      .header-btn:hover,
+      .header-btn.hovered {
+          background: #f8f9fa;
+      }
+      
+      .header-icon {
+          width: 20px;
+          height: 20px;
+          color: #333;
+      }
+      
+      .cart-badge {
+          position: absolute;
+          top: 6px;
+          right: 6px;
+          width: 16px;
+          height: 16px;
+          background: #ff4757;
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 60px;
+          display: flex;
+          flex-direction: column;
+          padding-bottom: 80px;
+      }
+      
+      /* ===== ROW: PRODUCT IMAGES ===== */
+      .product-images-row {
+          background: #ffffff;
+          position: relative;
+      }
+      
+      .image-slider {
+          position: relative;
+          width: 100%;
+          height: 375px;
+          overflow: hidden;
+      }
+      
+      .image-slide {
+          width: 100%;
+          height: 100%;
+          background: #f8f9fa;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 80px;
+          color: #ddd;
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0;
+          transition: opacity 0.3s;
+      }
+      
+      .image-slide.active {
+          opacity: 1;
+      }
+      
+      .slider-indicators {
+          position: absolute;
+          bottom: 16px;
+          left: 50%;
+          transform: translateX(-50%);
+          display: flex;
+          gap: 8px;
+      }
+      
+      .indicator {
+          width: 8px;
+          height: 8px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.5);
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+      
+      .indicator.active {
+          background: white;
+          transform: scale(1.2);
+      }
+      
+      .wishlist-btn {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 40px;
+          height: 40px;
+          background: rgba(255, 255, 255, 0.9);
+          backdrop-filter: blur(10px);
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .wishlist-btn:hover,
+      .wishlist-btn.hovered {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      
+      .wishlist-btn.active {
+          background: #ff4757;
+          color: white;
+      }
+      
+      .wishlist-icon {
+          width: 20px;
+          height: 20px;
+          color: #666;
+          transition: all 0.2s;
+      }
+      
+      .wishlist-btn.active .wishlist-icon {
+          color: white;
+      }
+      
+      /* ===== ROW: PRODUCT INFO ===== */
+      .product-info-row {
+          background: #ffffff;
+          padding: 24px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .brand-name {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+          margin-bottom: 8px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+      }
+      
+      .product-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #333;
+          margin-bottom: 16px;
+          line-height: 1.3;
+      }
+      
+      .price-section {
+          margin-bottom: 16px;
+      }
+      
+      .discount-info {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+      }
+      
+      .discount-rate {
+          font-size: 20px;
+          font-weight: 700;
+          color: #ff4757;
+      }
+      
+      .original-price {
+          font-size: 14px;
+          color: #999;
+          text-decoration: line-through;
+      }
+      
+      .current-price {
+          font-size: 24px;
+          font-weight: 700;
+          color: #333;
+      }
+      
+      .price-unit {
+          font-size: 16px;
+          font-weight: 500;
+          color: #666;
+      }
+      
+      .rating-section {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 20px;
+      }
+      
+      .rating-stars {
+          color: #ffd700;
+          font-size: 16px;
+      }
+      
+      .rating-text {
+          font-size: 14px;
+          color: #666;
+      }
+      
+      .delivery-info {
+          background: #f8f9fa;
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 20px;
+      }
+      
+      .delivery-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+      }
+      
+      .delivery-item:last-child {
+          margin-bottom: 0;
+      }
+      
+      .delivery-label {
+          font-size: 14px;
+          color: #666;
+      }
+      
+      .delivery-value {
+          font-size: 14px;
+          font-weight: 600;
+          color: #333;
+      }
+      
+      .delivery-value.free {
+          color: #2ed573;
+      }
+      
+      .delivery-value.fast {
+          color: #8b5cf6;
+      }
+      
+      /* ===== ROW: OPTIONS ===== */
+      .options-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .section-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 16px;
+      }
+      
+      .option-group {
+          margin-bottom: 20px;
+      }
+      
+      .option-group:last-child {
+          margin-bottom: 0;
+      }
+      
+      .option-label {
+          font-size: 14px;
+          font-weight: 500;
+          color: #333;
+          margin-bottom: 8px;
+      }
+      
+      .option-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+      }
+      
+      .option-btn {
+          padding: 8px 16px;
+          border: 1px solid #e0e0e0;
+          background: #ffffff;
+          border-radius: 8px;
+          font-size: 14px;
+          color: #333;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .option-btn:hover,
+      .option-btn.hovered {
+          border-color: #8b5cf6;
+          background: rgba(139, 92, 246, 0.05);
+      }
+      
+      .option-btn.selected {
+          border-color: #8b5cf6;
+          background: #8b5cf6;
+          color: white;
+      }
+      
+      .option-btn.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          pointer-events: none;
+      }
+      
+      .color-swatch {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 1px solid #e0e0e0;
+      }
+      
+      .quantity-selector {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-top: 8px;
+      }
+      
+      .quantity-btn {
+          width: 32px;
+          height: 32px;
+          border: 1px solid #e0e0e0;
+          background: #ffffff;
+          border-radius: 8px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+      }
+      
+      .quantity-btn:hover,
+      .quantity-btn.hovered {
+          border-color: #8b5cf6;
+          background: rgba(139, 92, 246, 0.05);
+      }
+      
+      .quantity-btn.disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          pointer-events: none;
+      }
+      
+      .quantity-icon {
+          width: 16px;
+          height: 16px;
+          color: #666;
+      }
+      
+      .quantity-input {
+          width: 60px;
+          height: 32px;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+          text-align: center;
+          font-size: 14px;
+          font-weight: 600;
+          outline: none;
+          transition: all 0.2s;
+      }
+      
+      .quantity-input:focus,
+      .quantity-input.focused {
+          border-color: #8b5cf6;
+          box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+      }
+      
+      /* ===== ROW: GRIPPER RECOMMENDATION ===== */
+      .gripper-recommendation-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .gripper-card {
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          border-radius: 16px;
+          padding: 20px;
+          color: white;
+          position: relative;
+          overflow: hidden;
+      }
+      
+      .gripper-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100px;
+          height: 100px;
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 50%;
+          transform: translate(30px, -30px);
+      }
+      
+      .gripper-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
+          position: relative;
+          z-index: 1;
+      }
+      
+      .gripper-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.2);
+          backdrop-filter: blur(10px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 700;
+          border: 2px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .gripper-info {
+          flex: 1;
+      }
+      
+      .gripper-name {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 2px;
+      }
+      
+      .gripper-category {
+          font-size: 12px;
+          opacity: 0.8;
+      }
+      
+      .gripper-message {
+          font-size: 14px;
+          line-height: 1.4;
+          margin-bottom: 16px;
+          position: relative;
+          z-index: 1;
+      }
+      
+      .gripper-actions {
+          display: flex;
+          gap: 12px;
+          position: relative;
+          z-index: 1;
+      }
+      
+      .gripper-btn {
+          flex: 1;
+          padding: 10px 16px;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border-radius: 8px;
+          color: white;
+          font-size: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+      
+      .gripper-btn:hover,
+      .gripper-btn.hovered {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-1px);
+      }
+      
+      .gripper-btn.primary {
+          background: rgba(255, 255, 255, 0.9);
+          color: #8b5cf6;
+      }
+      
+      .gripper-btn.primary:hover,
+      .gripper-btn.primary.hovered {
+          background: white;
+      }
+      
+      /* ===== ROW: REVIEWS ===== */
+      .reviews-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .reviews-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 16px;
+      }
+      
+      .reviews-title {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .reviews-count {
+          font-size: 14px;
+          color: #666;
+      }
+      
+      .view-all-btn {
+          font-size: 12px;
+          color: #8b5cf6;
+          background: none;
+          border: none;
+          cursor: pointer;
+          padding: 4px;
+          transition: all 0.2s;
+      }
+      
+      .view-all-btn:hover,
+      .view-all-btn.hovered {
+          color: #7c3aed;
+      }
+      
+      .review-summary {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          background: #f8f9fa;
+          border-radius: 12px;
+          padding: 16px;
+          margin-bottom: 16px;
+      }
+      
+      .rating-average {
+          text-align: center;
+      }
+      
+      .rating-score {
+          font-size: 24px;
+          font-weight: 700;
+          color: #333;
+          margin-bottom: 4px;
+      }
+      
+      .rating-stars-large {
+          color: #ffd700;
+          font-size: 14px;
+          margin-bottom: 4px;
+      }
+      
+      .rating-total {
+          font-size: 12px;
+          color: #666;
+      }
+      
+      .rating-breakdown {
+          flex: 1;
+      }
+      
+      .rating-bar {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 4px;
+      }
+      
+      .rating-bar:last-child {
+          margin-bottom: 0;
+      }
+      
+      .rating-label {
+          font-size: 12px;
+          color: #666;
+          width: 20px;
+      }
+      
+      .rating-progress {
+          flex: 1;
+          height: 4px;
+          background: #e0e0e0;
+          border-radius: 2px;
+          overflow: hidden;
+      }
+      
+      .rating-fill {
+          height: 100%;
+          background: #ffd700;
+          transition: width 0.3s;
+      }
+      
+      .rating-percent {
+          font-size: 12px;
+          color: #666;
+          width: 30px;
+          text-align: right;
+      }
+      
+      .review-list {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+      }
+      
+      .review-item {
+          border-bottom: 1px solid #f0f0f0;
+          padding-bottom: 16px;
+      }
+      
+      .review-item:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+      }
+      
+      .review-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 8px;
+      }
+      
+      .review-user {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .review-avatar {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: #8b5cf6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-weight: 700;
+          color: white;
+      }
+      
+      .review-username {
+          font-size: 12px;
+          font-weight: 600;
+          color: #333;
+      }
+      
+      .review-date {
+          font-size: 11px;
+          color: #999;
+      }
+      
+      .review-rating {
+          color: #ffd700;
+          font-size: 12px;
+      }
+      
+      .review-content {
+          font-size: 14px;
+          color: #333;
+          line-height: 1.4;
+          margin-bottom: 8px;
+      }
+      
+      .review-images {
+          display: flex;
+          gap: 8px;
+      }
+      
+      .review-image {
+          width: 60px;
+          height: 60px;
+          background: #f0f0f0;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          color: #ccc;
+          cursor: pointer;
+          transition: all 0.2s;
+      }
+      
+      .review-image:hover,
+      .review-image.hovered {
+          transform: scale(1.05);
+      }
+      
+      /* ===== BOTTOM ACTION BAR ===== */
+      .bottom-action-bar {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          max-width: 375px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          border-top: 1px solid #f0f0f0;
+          padding: 12px;
+          z-index: 100;
+      }
+      
+      .action-buttons {
+          display: flex;
+          gap: 12px;
+          align-items: center;
+      }
+      
+      .action-btn {
+          flex: 1;
+          height: 48px;
+          border: none;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+      }
+      
+      .action-btn.secondary {
+          background: #f8f9fa;
+          color: #333;
+          border: 1px solid #e0e0e0;
+      }
+      
+      .action-btn.secondary:hover,
+      .action-btn.secondary.hovered {
+          background: #e9ecef;
+          transform: translateY(-1px);
+      }
+      
+      .action-btn.primary {
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          color: white;
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+      }
+      
+      .action-btn.primary:hover,
+      .action-btn.primary.hovered {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(139, 92, 246, 0.4);
+      }
+      
+      .action-btn.primary.pressed {
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+      }
+      
+      .action-icon {
+          width: 20px;
+          height: 20px;
+      }
+      
+      /* ===== STATE CLASSES ===== */
+      .loading {
+          opacity: 0.6;
+          pointer-events: none;
+      }
+      
+      .disabled {
+          opacity: 0.4;
+          pointer-events: none;
+      }
+      
+      .selected {
+          background: rgba(139, 92, 246, 0.1);
+          border-color: #8b5cf6;
+      }
+      
+      .error {
+          border-color: #ff4757;
+          box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+      }
+      
+      .success {
+          border-color: #2ed573;
+          box-shadow: 0 0 0 3px rgba(46, 213, 115, 0.2);
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 0 48px;
+          }
+          
+          .bottom-action-bar {
+              max-width: 768px;
+              padding: 12px 48px;
+          }
+          
+          .product-info-row {
+              padding: 24px 48px;
+          }
+          
+          .options-row {
+              padding: 20px 48px;
+          }
+          
+          .gripper-recommendation-row {
+              padding: 20px 48px;
+          }
+          
+          .reviews-row {
+              padding: 20px 48px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+      <!-- Fixed Header -->
+      <header>
+          <div class="header-left">
+              <button class="back-button">
+                  <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path>
+                  </svg>
+              </button>
+          </div>
+          
+          <div class="header-right">
+              <button class="header-btn">
+                  <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 1 1 0-2.684m0 2.684 6.632 3.316m-6.632-6 6.632-3.316m0 0a3 3 0 1 0 5.367-2.684 3 3 0 0 0-5.367 2.684zm0 9.316a3 3 0 1 0 5.368 2.684 3 3 0 0 0-5.368-2.684z"/>
+                  </svg>
+              </button>
+              
+              <button class="header-btn">
+                  <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19M7 13v4a2 2 0 0 0 2 2h2m2-6v4a2 2 0 0 0 2 2h2m2-6v4a2 2 0 0 0 2 2h2"/>
+                  </svg>
+                  <div class="cart-badge">3</div>
+              </button>
+          </div>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Product Images -->
+          <div class="product-images-row">
+              <div class="image-slider">
+                  <div class="image-slide active">👗</div>
+                  <div class="image-slide">👗</div>
+                  <div class="image-slide">👗</div>
+                  <div class="image-slide">👗</div>
+              </div>
+              
+              <div class="slider-indicators">
+                  <div class="indicator active"></div>
+                  <div class="indicator"></div>
+                  <div class="indicator"></div>
+                  <div class="indicator"></div>
+              </div>
+              
+              <button class="wishlist-btn">
+                  <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+              </button>
+          </div>
+          
+          <!-- Row: Product Info -->
+          <div class="product-info-row">
+              <div class="brand-name">FASHION BRAND</div>
+                              <div class="product-title">여름 시원한 린넨 원피스 - 편안하고 우아한 디자인</div>
+                
+                <div class="price-section">
+                    <div class="discount-info">
+                        <span class="discount-rate">35%</span>
+                        <span class="original-price">89,000원</span>
+                    </div>
+                    <div class="current-price">
+                        57,850<span class="price-unit">원</span>
+                    </div>
+                </div>
+                
+                <div class="rating-section">
+                    <div class="rating-stars">★★★★☆</div>
+                    <span class="rating-text">4.3 (127개 리뷰)</span>
+                </div>
+                
+                <div class="delivery-info">
+                    <div class="delivery-item">
+                        <span class="delivery-label">배송비</span>
+                        <span class="delivery-value free">무료배송</span>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="delivery-label">배송일정</span>
+                        <span class="delivery-value">내일(9/9) 도착 예정</span>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="delivery-label">특급배송</span>
+                        <span class="delivery-value fast">당일배송 가능</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Row: Options -->
+            <div class="options-row">
+                <div class="section-title">옵션 선택</div>
+                
+                <div class="option-group">
+                    <div class="option-label">색상</div>
+                    <div class="option-buttons">
+                        <button class="option-btn selected">
+                            <div class="color-swatch" style="background: #f8f9fa;"></div>
+                            <span>화이트</span>
+                        </button>
+                        <button class="option-btn">
+                            <div class="color-swatch" style="background: #1a1a1a;"></div>
+                            <span>블랙</span>
+                        </button>
+                        <button class="option-btn">
+                            <div class="color-swatch" style="background: #8b5cf6;"></div>
+                            <span>퍼플</span>
+                        </button>
+                        <button class="option-btn disabled">
+                            <div class="color-swatch" style="background: #ff4757;"></div>
+                            <span>레드 (품절)</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-label">사이즈</div>
+                    <div class="option-buttons">
+                        <button class="option-btn">S</button>
+                        <button class="option-btn selected">M</button>
+                        <button class="option-btn">L</button>
+                        <button class="option-btn">XL</button>
+                    </div>
+                </div>
+                
+                <div class="option-group">
+                    <div class="option-label">수량</div>
+                    <div class="quantity-selector">
+                        <button class="quantity-btn">
+                            <svg class="quantity-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 13H5v-2h14v2z"/>
+                            </svg>
+                        </button>
+                        <input type="number" class="quantity-input" value="1" min="1" max="10">
+                        <button class="quantity-btn">
+                            <svg class="quantity-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Row: Gripper Recommendation -->
+            <div class="gripper-recommendation-row">
+                <div class="section-title">그리퍼 추천</div>
+                
+                <div class="gripper-card">
+                    <div class="gripper-header">
+                        <div class="gripper-avatar">마</div>
+                        <div class="gripper-info">
+                            <div class="gripper-name">마녀옷장</div>
+                            <div class="gripper-category">패션 · 뷰티 전문가</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gripper-message">
+                        "이 원피스는 정말 시원하고 편해요! 린넨 소재라 여름에 딱이고, 디자인도 너무 예뻐서 데일리로 입기 좋아요. 화이트 컬러 추천드려요 ✨"
+                    </div>
+                    
+                    <div class="gripper-actions">
+                        <button class="gripper-btn">팔로우</button>
+                        <button class="gripper-btn primary">더 많은 추천 보기</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Row: Reviews -->
+            <div class="reviews-row">
+                <div class="reviews-header">
+                    <div class="reviews-title">
+                        <div class="section-title">리뷰</div>
+                        <span class="reviews-count">(127개)</span>
+                    </div>
+                    <button class="view-all-btn">전체보기</button>
+                </div>
+                
+                <div class="review-summary">
+                    <div class="rating-average">
+                        <div class="rating-score">4.3</div>
+                        <div class="rating-stars-large">★★★★☆</div>
+                        <div class="rating-total">127개 리뷰</div>
+                    </div>
+                    
+                    <div class="rating-breakdown">
+                        <div class="rating-bar">
+                            <span class="rating-label">5★</span>
+                            <div class="rating-progress">
+                                <div class="rating-fill" style="width: 65%"></div>
+                            </div>
+                            <span class="rating-percent">65%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">4★</span>
+                            <div class="rating-progress">
+                                <div class="rating-fill" style="width: 20%"></div>
+                            </div>
+                            <span class="rating-percent">20%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">3★</span>
+                            <div class="rating-progress">
+                                <div class="rating-fill" style="width: 10%"></div>
+                            </div>
+                            <span class="rating-percent">10%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">2★</span>
+                            <div class="rating-progress">
+                                <div class="rating-fill" style="width: 3%"></div>
+                            </div>
+                            <span class="rating-percent">3%</span>
+                        </div>
+                        <div class="rating-bar">
+                            <span class="rating-label">1★</span>
+                            <div class="rating-progress">
+                                <div class="rating-fill" style="width: 2%"></div>
+                            </div>
+                            <span class="rating-percent">2%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="review-list">
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-user">
+                                <div class="review-avatar">김</div>
+                                <div class="review-username">김**</div>
+                            </div>
+                            <div class="review-date">2024.09.05</div>
+                        </div>
+                        <div class="review-rating">★★★★★</div>
+                        <div class="review-content">
+                            소재가 정말 시원하고 좋아요! 디자인도 예쁘고 핏도 딱 맞네요. 여름에 입기 정말 좋을 것 같아요. 배송도 빨랐습니다.
+                        </div>
+                        <div class="review-images">
+                            <div class="review-image">📷</div>
+                            <div class="review-image">📷</div>
+                        </div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-user">
+                                <div class="review-avatar">박</div>
+                                <div class="review-username">박**</div>
+                            </div>
+                            <div class="review-date">2024.09.03</div>
+                        </div>
+                        <div class="review-rating">★★★★☆</div>
+                        <div class="review-content">
+                            색상이 화면과 조금 달랐지만 그래도 예뻐요. 사이즈는 평소보다 한 치수 크게 주문하는 걸 추천드려요.
+                        </div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="review-user">
+                                <div class="review-avatar">이</div>
+                                <div class="review-username">이**</div>
+                            </div>
+                            <div class="review-date">2024.09.01</div>
+                        </div>
+                        <div class="review-rating">★★★★★</div>
+                        <div class="review-content">
+                            완전 만족해요! 린넨 소재라 구김이 좀 있긴 하지만 그게 또 자연스러운 느낌이라 좋네요. 재구매 의사 있어요.
+                        </div>
+                        <div class="review-images">
+                            <div class="review-image">📷</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Fixed Bottom Action Bar -->
+        <div class="bottom-action-bar">
+            <div class="action-buttons">
+                <button class="action-btn secondary">
+                    <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293c-.63.63-.184 1.707.707 1.707H19M7 13v4a2 2 0 0 0 2 2h2m2-6v4a2 2 0 0 0 2 2h2m2-6v4a2 2 0 0 0 2 2h2"/>
+                    </svg>
+                    장바구니
+                </button>
+                
+                <button class="action-btn primary">
+                    <svg class="action-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    바로구매
+                </button>
+            </div>
+        </div>
+    </div>
+  </body>
+  </html>

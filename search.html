@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>검색 - 상품 검색</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #ffffff;
+          line-height: 1.5;
+          font-size: 14px;
+          overflow-x: hidden;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #1a1a1a;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          background: #1a1a1a;
+          z-index: 100;
+          padding: 16px 12px 20px;
+      }
+      
+      .search-container {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+      
+      .search-input-wrapper {
+          flex: 1;
+          position: relative;
+          background: #333333;
+          border-radius: 12px;
+          overflow: hidden;
+      }
+      
+      .search-input {
+          width: 100%;
+          padding: 16px 20px 16px 50px;
+          background: transparent;
+          border: none;
+          color: #ffffff;
+          font-size: 16px;
+          outline: none;
+      }
+      
+      .search-input::placeholder {
+          color: #888888;
+      }
+      
+      .search-icon {
+          position: absolute;
+          left: 18px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 20px;
+          height: 20px;
+          color: #888888;
+      }
+      
+      .cancel-btn {
+          background: transparent;
+          border: none;
+          color: #999999;
+          font-size: 15px;
+          font-weight: 500;
+          cursor: pointer;
+          padding: 8px 4px;
+          transition: color 0.2s;
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 80px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== ROW: RECENT SEARCH ===== */
+      .recent-search-row {
+          padding: 0 12px 24px;
+          border-bottom: 8px solid #0f0f0f;
+          margin-bottom: 24px;
+      }
+      
+      .recent-search-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 16px;
+      }
+      
+      .section-title {
+          font-size: 18px;
+          font-weight: 700;
+          color: #ffffff;
+      }
+      
+      .clear-btn {
+          background: transparent;
+          border: none;
+          color: #888888;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          padding: 4px 8px;
+          transition: color 0.2s;
+      }
+      
+      .clear-actions {
+          display: flex;
+          gap: 16px;
+          align-items: center;
+      }
+      
+      .clear-all-btn, .done-btn {
+          background: transparent;
+          border: none;
+          color: #888888;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          padding: 4px 8px;
+          transition: color 0.2s;
+      }
+      
+      .done-btn {
+          color: #ffffff;
+          font-weight: 600;
+      }
+      
+      .divider {
+          color: #444444;
+          font-size: 14px;
+      }
+      
+      .recent-search-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+      }
+      
+      .search-tag {
+          background: #333333;
+          border: none;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 500;
+          padding: 10px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: background-color 0.2s;
+      }
+      
+      .remove-tag {
+          background: transparent;
+          border: none;
+          color: #888888;
+          font-size: 16px;
+          cursor: pointer;
+          padding: 0;
+          width: 16px;
+          height: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: color 0.2s;
+      }
+      
+      /* ===== ROW: RECOMMENDED GRIPPER ===== */
+      .recommended-row {
+          padding: 0 12px 32px;
+      }
+      
+      .gripper-container {
+          position: relative;
+          overflow: visible;
+      }
+      
+      .gripper-slider {
+          display: flex;
+          gap: 16px;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          padding-right: 40px;
+      }
+      
+      .gripper-slider::-webkit-scrollbar {
+          display: none;
+      }
+      
+      .gripper-card {
+          min-width: calc(100% - 40px);
+          background: #2a2a2a;
+          border-radius: 16px;
+          padding: 20px;
+          flex-shrink: 0;
+          position: relative;
+      }
+      
+      .gripper-header {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 16px;
+      }
+      
+      .gripper-avatar {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          font-weight: 700;
+          color: white;
+          flex-shrink: 0;
+          box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+      }
+      
+      .gripper-info {
+          flex: 1;
+      }
+      
+      .gripper-name {
+          font-size: 18px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 4px;
+      }
+      
+      .gripper-category {
+          font-size: 14px;
+          color: #888888;
+          font-weight: 500;
+      }
+      
+      .follow-btn {
+          background: transparent;
+          border: 1px solid #555555;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          padding: 8px 16px;
+          border-radius: 20px;
+          cursor: pointer;
+          transition: all 0.2s;
+          flex-shrink: 0;
+      }
+      
+      .gripper-images {
+          display: flex;
+          gap: 8px;
+          justify-content: space-between;
+      }
+      
+      .gripper-image {
+          width: 116px;
+          height: 171px;
+          border-radius: 12px;
+          overflow: hidden;
+          position: relative;
+          flex-shrink: 0;
+      }
+      
+      .image-placeholder {
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(135deg, #4a4a4a, #5a5a5a);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #888888;
+          font-size: 12px;
+          font-weight: 600;
+      }
+      
+      /* ===== 피그마용 상태 구분 ===== */
+      /* 기본 상태: 지우기 버튼만 표시 */
+      .state-normal .clear-actions {
+          display: none;
+      }
+      
+      .state-normal .clear-btn {
+          display: block;
+      }
+      
+      .state-normal .remove-tag {
+          display: none;
+      }
+      
+      /* 편집 상태: 전체 삭제|완료 버튼 표시, × 버튼 표시 */
+      .state-edit .clear-actions {
+          display: flex;
+      }
+      
+      .state-edit .clear-btn {
+          display: none;
+      }
+      
+      .state-edit .remove-tag {
+          display: flex;
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 20px 48px 24px;
+          }
+          
+          .recent-search-row {
+              padding: 0 48px 32px;
+              margin-bottom: 32px;
+          }
+          
+          .recommended-row {
+              padding: 0 48px 40px;
+          }
+          
+          .section-title {
+              font-size: 20px;
+          }
+          
+          .gripper-card {
+              padding: 24px;
+              min-width: calc(100% - 80px);
+          }
+          
+          .gripper-avatar {
+              width: 70px;
+              height: 70px;
+              font-size: 28px;
+          }
+          
+          .gripper-name {
+              font-size: 20px;
+          }
+          
+          .gripper-category {
+              font-size: 16px;
+          }
+          
+          .gripper-image {
+              width: 140px;
+              height: 206px;
+          }
+      }
+      
+      /* ===== SCROLL HINT ===== */
+      .gripper-container::after {
+          content: '';
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 40px;
+          background: linear-gradient(to left, rgba(26, 26, 26, 0.8), transparent);
+          pointer-events: none;
+          z-index: 10;
+      }
+  </style>
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container state-normal">
+      <!-- Fixed Header -->
+      <header>
+          <div class="search-container">
+              <div class="search-input-wrapper">
+                  <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <circle cx="11" cy="11" r="8"/>
+                      <path d="m21 21-4.35-4.35"/>
+                  </svg>
+                  <input type="text" class="search-input" placeholder="상품명, 브랜드명" />
+              </div>
+              <button class="cancel-btn">취소</button>
+          </div>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Recent Search -->
+          <div class="recent-search-row">
+              <div class="recent-search-header">
+                  <h2 class="section-title">최근 검색</h2>
+                  <button class="clear-btn">지우기</button>
+                  <div class="clear-actions">
+                      <button class="clear-all-btn">전체 삭제</button>
+                      <span class="divider">|</span>
+                      <button class="done-btn">완료</button>
+                  </div>
+              </div>
+              
+              <div class="recent-search-tags">
+                  <div class="search-tag">
+                      <span>아디다스</span>
+                      <button class="remove-tag">×</button>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Recommended Gripper -->
+          <div class="recommended-row">
+              <h2 class="section-title">추천 그리퍼</h2>
+              
+              <div class="gripper-container">
+                  <div class="gripper-slider">
+                      <!-- Gripper Card 1 -->
+                      <div class="gripper-card">
+                          <div class="gripper-header">
+                              <div class="gripper-avatar">땡</div>
+                              <div class="gripper-info">
+                                  <div class="gripper-name">땡여사몰</div>
+                                  <div class="gripper-category">생활/주방</div>
+                              </div>
+                              <button class="follow-btn">Follow</button>
+                          </div>
+                          
+                          <div class="gripper-images">
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">주방용품</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">생활용품</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">청소용품</div>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Gripper Card 2 -->
+                      <div class="gripper-card">
+                          <div class="gripper-header">
+                              <div class="gripper-avatar" style="background: linear-gradient(135deg, #667eea, #764ba2);">마</div>
+                              <div class="gripper-info">
+                                  <div class="gripper-name">마녀옷장</div>
+                                  <div class="gripper-category">패션/의류</div>
+                              </div>
+                              <button class="follow-btn">Follow</button>
+                          </div>
+                          
+                          <div class="gripper-images">
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">원피스</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">블라우스</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">스커트</div>
+                              </div>
+                          </div>
+                      </div>
+                      
+                      <!-- Gripper Card 3 -->
+                      <div class="gripper-card">
+                          <div class="gripper-header">
+                              <div class="gripper-avatar" style="background: linear-gradient(135deg, #ffeaa7, #fdcb6e);">🍯</div>
+                              <div class="gripper-info">
+                                  <div class="gripper-name">꿀템스토어</div>
+                                  <div class="gripper-category">식품/건강</div>
+                              </div>
+                              <button class="follow-btn">Follow</button>
+                          </div>
+                          
+                          <div class="gripper-images">
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">꿀차</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">건강식품</div>
+                              </div>
+                              <div class="gripper-image">
+                                  <div class="image-placeholder">유기농</div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </main>
+  </div>
+</body>
+</html>

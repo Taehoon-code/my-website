@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>설정 - 그립</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #0f0f0f;
+          color: #ffffff;
+          line-height: 1.5;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+          overflow-x: hidden;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #0f0f0f;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+      
+      /* ===== HEADER ===== */
+      .settings-header {
+          position: sticky;
+          top: 0;
+          background: #0f0f0f;
+          z-index: 100;
+          padding: 16px 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: all 0.3s ease;
+      }
+      
+      /* Header with shadow state */
+      .settings-header.scrolled {
+          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(10px);
+      }
+      
+      .back-btn {
+          width: 24px;
+          height: 24px;
+          color: #ffffff;
+          cursor: pointer;
+          transition: all 0.2s ease;
+      }
+      
+      /* Back button states */
+      .back-btn:hover,
+      .back-btn.hovered {
+          color: #ff6b6b;
+          transform: scale(1.1);
+      }
+      
+      .back-btn:active,
+      .back-btn.pressed {
+          transform: scale(0.9);
+      }
+      
+      .header-title {
+          flex: 1;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 600;
+          color: #ffffff;
+      }
+      
+      .header-spacer {
+          width: 24px;
+          height: 24px;
+      }
+      
+      /* ===== SETTINGS SECTIONS ===== */
+      .settings-content {
+          padding: 20px 12px;
+      }
+      
+      .settings-section {
+          margin-bottom: 24px;
+      }
+      
+      .section-header {
+          font-size: 13px;
+          font-weight: 600;
+          color: #888888;
+          margin-bottom: 12px;
+          padding: 0 4px;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+      }
+      
+      /* ===== CARD STYLES ===== */
+      .settings-card {
+          background: #1a1a1a;
+          border-radius: 16px;
+          padding: 4px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          border: 1px solid #2a2a2a;
+          transition: all 0.3s ease;
+          overflow: hidden;
+      }
+      
+      /* Card hover states */
+      .settings-card:hover,
+      .settings-card.hovered {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+          border-color: #333333;
+      }
+      
+      .settings-card:active,
+      .settings-card.pressed {
+          transform: translateY(0);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .settings-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 20px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: all 0.2s ease;
+          position: relative;
+          border-radius: 12px;
+      }
+      
+      .settings-item:not(:last-child) {
+          border-bottom: 1px solid #2a2a2a;
+      }
+      
+      /* Settings item states */
+      .settings-item:hover,
+      .settings-item.hovered {
+          background: rgba(255, 255, 255, 0.05);
+      }
+      
+      .settings-item:active,
+      .settings-item.pressed {
+          background: rgba(255, 255, 255, 0.1);
+          transform: scale(0.98);
+      }
+      
+      .settings-item.no-arrow {
+          cursor: default;
+      }
+      
+      .settings-item.no-arrow:hover,
+      .settings-item.no-arrow.hovered {
+          background: transparent;
+      }
+      
+      .settings-label {
+          font-size: 16px;
+          font-weight: 500;
+          color: #ffffff;
+      }
+      
+      .settings-extra {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .settings-value {
+          font-size: 14px;
+          color: #888888;
+          font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 4px 8px;
+          border-radius: 6px;
+      }
+      
+      .settings-arrow {
+          width: 16px;
+          height: 16px;
+          color: #666666;
+          transition: all 0.2s ease;
+      }
+      
+      .settings-item:hover .settings-arrow,
+      .settings-item.hovered .settings-arrow {
+          color: #ffffff;
+          transform: translateX(2px);
+      }
+      
+      /* ===== SINGLE ITEM CARDS ===== */
+      .single-card {
+          margin-bottom: 12px;
+      }
+      
+      .single-card .settings-item {
+          border-bottom: none;
+      }
+      
+      /* ===== SPECIAL CARDS ===== */
+      .logout-card {
+          background: linear-gradient(135deg, #2a1a1a, #1a1a1a);
+          border-color: #ff6b6b33;
+      }
+      
+      .logout-card:hover,
+      .logout-card.hovered {
+          border-color: #ff6b6b66;
+          box-shadow: 0 8px 30px rgba(255, 107, 107, 0.2);
+      }
+      
+      .logout-item {
+          color: #ff6b6b !important;
+      }
+      
+      .logout-item .settings-label {
+          color: #ff6b6b;
+      }
+      
+      .logout-item .settings-arrow {
+          color: #ff6b6b;
+      }
+      
+      .withdraw-card {
+          background: linear-gradient(135deg, #2a1a1a, #1a1a1a);
+          border-color: #ff444433;
+      }
+      
+      .withdraw-card:hover,
+      .withdraw-card.hovered {
+          border-color: #ff444466;
+          box-shadow: 0 8px 30px rgba(255, 68, 68, 0.2);
+      }
+      
+      .withdraw-item {
+          color: #ff4444 !important;
+      }
+      
+      .withdraw-item .settings-label {
+          color: #ff4444;
+      }
+      
+      .withdraw-item .settings-arrow {
+          color: #ff4444;
+      }
+      
+      /* ===== INFO CARD ===== */
+      .info-card {
+          background: linear-gradient(135deg, #1a2a2a, #1a1a1a);
+          border-color: #4a9eff33;
+      }
+      
+      .info-card:hover,
+      .info-card.hovered {
+          border-color: #4a9eff66;
+          box-shadow: 0 8px 30px rgba(74, 158, 255, 0.1);
+      }
+      
+      /* ===== STATE CLASSES FOR FIGMA ===== */
+      /* Loading state */
+      .loading {
+          opacity: 0.6;
+          pointer-events: none;
+      }
+      
+      .loading::after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          right: 20px;
+          width: 16px;
+          height: 16px;
+          border: 2px solid #333;
+          border-top: 2px solid #fff;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+      
+      /* Disabled state */
+      .disabled {
+          opacity: 0.4;
+          pointer-events: none;
+          cursor: not-allowed;
+      }
+      
+      /* Selected state */
+      .selected {
+          background: rgba(255, 107, 107, 0.1) !important;
+          border-color: #ff6b6b !important;
+      }
+      
+      /* Focus state */
+      .focused {
+          outline: 2px solid #ff6b6b;
+          outline-offset: 4px;
+      }
+      
+      /* Error state */
+      .error {
+          border-color: #ff4444 !important;
+          box-shadow: 0 0 0 3px rgba(255, 68, 68, 0.2);
+      }
+      
+      /* Success state */
+      .success {
+          border-color: #44ff44 !important;
+          box-shadow: 0 0 0 3px rgba(68, 255, 68, 0.2);
+      }
+      
+      /* ===== BOTTOM SPACING ===== */
+      .bottom-spacing {
+          height: 100px;
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          .settings-header {
+              padding: 20px 48px;
+          }
+          
+          .settings-content {
+              padding: 24px 48px;
+          }
+          
+          .settings-card {
+              border-radius: 20px;
+          }
+          
+          .settings-item {
+              padding: 22px 24px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+      <!-- Settings Header -->
+      <header class="settings-header">
+          <svg class="back-btn" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path>
+          </svg>
+          
+          <div class="header-title">설정</div>
+          
+          <div class="header-spacer"></div>
+      </header>
+      
+      <!-- Settings Content -->
+      <div class="settings-content">
+          <!-- Profile Section -->
+          <div class="settings-section">
+              <h2 class="section-header">계정</h2>
+              <div class="settings-card">
+                  <a href="#" class="settings-item">
+                      <span class="settings-label">프로필 수정</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="settings-item">
+                      <span class="settings-label">개인정보 수정</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="settings-item">
+                      <span class="settings-label">로그인 관리</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Privacy Section -->
+          <div class="settings-section">
+              <h2 class="section-header">개인정보</h2>
+              <div class="settings-card single-card">
+                  <a href="#" class="settings-item">
+                      <span class="settings-label">차단 관리</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Service Info Section -->
+          <div class="settings-section">
+              <h2 class="section-header">서비스 정보</h2>
+              <div class="settings-card info-card">
+                  <a href="#" class="settings-item">
+                      <span class="settings-label">약관 및 정책</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <div class="settings-item no-arrow">
+                      <span class="settings-label">이용자 코드</span>
+                      <div class="settings-extra">
+                          <span class="settings-value">7zx43x24</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Other Section -->
+          <div class="settings-section">
+              <h2 class="section-header">기타</h2>
+              <div class="settings-card logout-card single-card">
+                  <a href="#" class="settings-item logout-item">
+                      <span class="settings-label">로그아웃</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+              
+              <div class="settings-card withdraw-card single-card">
+                  <a href="#" class="settings-item withdraw-item">
+                      <span class="settings-label">탈퇴</span>
+                      <div class="settings-extra">
+                          <svg class="settings-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Bottom Spacing -->
+          <div class="bottom-spacing"></div>
+      </div>
+  </div>
+</body>
+</html>

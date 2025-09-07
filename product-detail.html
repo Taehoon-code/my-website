@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>애플망고 - 상품 상세</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #1a1a1a;
+          line-height: 1.5;
+          font-size: 14px;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #ffffff;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          height: 60px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 12px;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .header-left {
+          display: flex;
+          align-items: center;
+      }
+      
+      .back-button {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+      }
+      
+      .back-icon {
+          width: 20px;
+          height: 20px;
+          color: #333;
+      }
+      
+      .header-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #333;
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+      }
+      
+      .header-right {
+          display: flex;
+          align-items: center;
+      }
+      
+      .cart-button {
+          width: 40px;
+          height: 40px;
+          border: none;
+          background: transparent;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 8px;
+          position: relative;
+      }
+      
+      .cart-icon {
+          width: 24px;
+          height: 24px;
+          color: #333;
+      }
+      
+      .cart-badge {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          width: 16px;
+          height: 16px;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: white;
+          font-size: 10px;
+          font-weight: 700;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 8px rgba(255, 71, 87, 0.4);
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 60px;
+          padding-bottom: 80px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== ROW: PRODUCT IMAGE ===== */
+      .product-image-row {
+          position: relative;
+          background: #ffffff;
+      }
+      
+      .product-image-container {
+          width: 100%;
+          aspect-ratio: 1;
+          position: relative;
+          background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 64px;
+          overflow: hidden;
+      }
+      
+      .stock-indicator {
+          position: absolute;
+          bottom: 16px;
+          left: 16px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          font-size: 12px;
+          font-weight: 600;
+          padding: 6px 12px;
+          border-radius: 16px;
+          backdrop-filter: blur(10px);
+      }
+      
+      /* ===== ROW: PRODUCT INFO ===== */
+      .product-info-row {
+          background: #ffffff;
+          padding: 28px 12px;
+      }
+      
+      .flash-badge {
+          display: inline-flex;
+          align-items: center;
+          background: linear-gradient(135deg, #8b5cf6, #a855f7);
+          color: white;
+          font-size: 13px;
+          font-weight: 700;
+          padding: 8px 16px;
+          border-radius: 20px;
+          margin-bottom: 20px;
+          box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+      }
+      
+      .flash-icon {
+          width: 14px;
+          height: 14px;
+          margin-right: 6px;
+      }
+      
+      .product-title {
+          font-size: 26px;
+          font-weight: 800;
+          color: #1a1a1a;
+          margin-bottom: 20px;
+          line-height: 1.2;
+          letter-spacing: -0.8px;
+      }
+      
+      .price-section {
+          margin-bottom: 0;
+      }
+      
+      .current-price {
+          font-size: 32px;
+          font-weight: 900;
+          color: #1a1a1a;
+          letter-spacing: -1.2px;
+          margin-bottom: 12px;
+      }
+      
+      .points-info {
+          font-size: 15px;
+          color: #8b5cf6;
+          font-weight: 600;
+          background: #f3f0ff;
+          padding: 8px 12px;
+          border-radius: 8px;
+          display: inline-block;
+      }
+      
+      /* ===== ROW: DELIVERY INFO ===== */
+      .delivery-info-row {
+          background: #ffffff;
+          padding: 28px 12px;
+          border-top: 8px solid #f8f9fa;
+      }
+      
+      .info-section {
+          margin-bottom: 28px;
+      }
+      
+      .info-section:last-child {
+          margin-bottom: 0;
+      }
+      
+      .info-item {
+          display: flex;
+          align-items: flex-start;
+          margin-bottom: 16px;
+      }
+      
+      .info-item:last-child {
+          margin-bottom: 0;
+      }
+      
+      .info-label {
+          font-size: 15px;
+          font-weight: 700;
+          color: #333;
+          min-width: 90px;
+          flex-shrink: 0;
+      }
+      
+      .info-label.highlight {
+          color: #ff4757;
+      }
+      
+      .info-value {
+          font-size: 15px;
+          color: #666;
+          line-height: 1.6;
+          flex: 1;
+      }
+      
+      .info-value.strong {
+          font-weight: 600;
+          color: #333;
+      }
+      
+      /* ===== ROW: SELLER INFO ===== */
+      .seller-info-row {
+          background: #ffffff;
+          border-top: 8px solid #f8f9fa;
+      }
+      
+      .seller-menu {
+          padding: 0;
+          border-bottom: 8px solid #f8f9fa;
+      }
+      
+      .menu-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 20px 12px;
+          border-bottom: 1px solid #f0f0f0;
+          cursor: pointer;
+          transition: background-color 0.2s;
+      }
+      
+      .menu-item:hover {
+          background-color: #f8f9fa;
+      }
+      
+      .menu-item:last-child {
+          border-bottom: none;
+      }
+      
+      .menu-text {
+          font-size: 16px;
+          color: #333;
+          font-weight: 600;
+      }
+      
+      .menu-arrow {
+          width: 16px;
+          height: 16px;
+          color: #999;
+      }
+      
+      .seller-profile {
+          padding: 32px 12px;
+          background: linear-gradient(135deg, #f8f9ff, #ffffff);
+      }
+      
+      .seller-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 28px;
+      }
+      
+      .seller-info {
+          display: flex;
+          align-items: center;
+      }
+      
+      .seller-avatar {
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          margin-right: 16px;
+          overflow: hidden;
+          box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+      }
+      
+      .seller-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+      }
+      
+      .seller-details h3 {
+          font-size: 20px;
+          font-weight: 800;
+          color: #1a1a1a;
+          margin-bottom: 6px;
+          letter-spacing: -0.5px;
+      }
+      
+      .seller-badge {
+          display: inline-flex;
+          align-items: center;
+          font-size: 13px;
+          color: #ff4757;
+          font-weight: 700;
+          background: #fff5f5;
+          padding: 4px 10px;
+          border-radius: 12px;
+      }
+      
+      .ruby-icon {
+          width: 14px;
+          height: 14px;
+          margin-right: 4px;
+          color: #ff4757;
+      }
+      
+      .follow-btn {
+          background: linear-gradient(135deg, #667eea, #764ba2);
+          border: none;
+          color: white;
+          font-size: 15px;
+          font-weight: 700;
+          padding: 12px 20px;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 0.2s;
+          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+      
+      .seller-stats {
+          display: flex;
+          gap: 24px;
+          background: white;
+          padding: 20px;
+          border-radius: 16px;
+          box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+      
+      .stat-item {
+          text-align: center;
+          flex: 1;
+      }
+      
+      .stat-value {
+          font-size: 22px;
+          font-weight: 900;
+          color: #1a1a1a;
+          margin-bottom: 6px;
+          letter-spacing: -0.5px;
+      }
+      
+      .stat-label {
+          font-size: 13px;
+          color: #666;
+          font-weight: 600;
+      }
+      
+      /* ===== ROW: SELLER PRODUCTS ===== */
+      .seller-products-row {
+          background: #ffffff;
+          padding: 32px 12px;
+          border-top: 1px solid #f0f0f0;
+      }
+      
+      .products-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 16px;
+      }
+      
+      .product-card {
+          border: 1px solid #f0f0f0;
+          border-radius: 16px;
+          overflow: hidden;
+          cursor: pointer;
+          transition: all 0.3s;
+          background: white;
+      }
+      
+      .product-card:hover {
+          border-color: #8b5cf6;
+          transform: translateY(-4px);
+          box-shadow: 0 8px 24px rgba(139, 92, 246, 0.15);
+      }
+      
+      .product-image {
+          width: 100%;
+          aspect-ratio: 1;
+          background: linear-gradient(135deg, #a8edea, #fed6e3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 28px;
+          position: relative;
+      }
+      
+      .witch-logo {
+          position: absolute;
+          top: 8px;
+          left: 8px;
+          background: rgba(255, 255, 255, 0.95);
+          padding: 4px 8px;
+          border-radius: 8px;
+          font-size: 9px;
+          font-weight: 800;
+          color: #333;
+          letter-spacing: -0.2px;
+      }
+      
+      .product-info {
+          padding: 16px;
+      }
+      
+      .product-name {
+          font-size: 14px;
+          color: #333;
+          font-weight: 600;
+          margin-bottom: 12px;
+          line-height: 1.4;
+          height: 40px;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+      }
+      
+      .product-price {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+      }
+      
+      .price {
+          font-size: 16px;
+          font-weight: 800;
+          color: #ff4757;
+          letter-spacing: -0.3px;
+      }
+      
+      .discount {
+          font-size: 12px;
+          color: #999;
+          font-weight: 700;
+          background: #f8f9fa;
+          padding: 2px 6px;
+          border-radius: 4px;
+      }
+      
+      /* ===== ROW: COMPANY INFO ===== */
+      .company-info-row {
+          background: #ffffff;
+          padding: 20px 12px;
+          border-top: 1px solid #f0f0f0;
+      }
+      
+      .company-name {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          font-size: 15px;
+          color: #666;
+          font-weight: 600;
+      }
+      
+      .company-arrow {
+          width: 12px;
+          height: 12px;
+          color: #999;
+      }
+      
+      /* ===== ROW: TABS ===== */
+      .tabs-row {
+          background: #ffffff;
+          border-top: 8px solid #f8f9fa;
+          position: sticky;
+          top: 60px;
+          z-index: 50;
+      }
+      
+      .tabs-container {
+          display: flex;
+          border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .tab-item {
+          flex: 1;
+          padding: 18px;
+          font-size: 16px;
+          font-weight: 700;
+          color: #999;
+          cursor: pointer;
+          text-align: center;
+          position: relative;
+          border-bottom: 3px solid transparent;
+          transition: all 0.3s;
+      }
+      
+      .tab-item.active {
+          color: #1a1a1a;
+          border-bottom-color: #8b5cf6;
+          background: linear-gradient(135deg, #f8f9ff, #ffffff);
+      }
+      
+      /* ===== ROW: CONTENT ===== */
+      .content-row {
+          background: #ffffff;
+          padding: 32px 12px;
+          min-height: 400px;
+      }
+      
+      .section-title {
+          font-size: 20px;
+          font-weight: 800;
+          color: #1a1a1a;
+          margin-bottom: 20px;
+          letter-spacing: -0.5px;
+      }
+      
+      .content-placeholder {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 200px;
+          background: linear-gradient(135deg, #f8f9fa, #ffffff);
+          border-radius: 16px;
+          color: #999;
+          font-size: 15px;
+          font-weight: 600;
+          border: 2px dashed #e0e0e0;
+      }
+      
+      /* ===== FOOTER ===== */
+      footer {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          max-width: 375px;
+          height: 80px;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(20px);
+          border-top: 1px solid #f0f0f0;
+          z-index: 100;
+          display: flex;
+          align-items: center;
+          padding: 16px 12px;
+          gap: 12px;
+      }
+      
+      .wishlist-btn {
+          width: 48px;
+          height: 48px;
+          border: 2px solid #e0e0e0;
+          background: #ffffff;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 12px;
+          transition: all 0.2s ease;
+      }
+      
+      .wishlist-btn:hover {
+          border-color: #ff4757;
+          color: #ff4757;
+          transform: scale(1.05);
+      }
+      
+      .wishlist-icon {
+          width: 20px;
+          height: 20px;
+      }
+      
+      .cart-btn {
+          flex: 1;
+          background: #333;
+          color: #ffffff;
+          border: none;
+          padding: 16px;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+      }
+      
+      .cart-btn:hover {
+          background: #555;
+          transform: translateY(-1px);
+      }
+      
+      .buy-btn {
+          flex: 1;
+          background: linear-gradient(135deg, #ff4757, #ff3742);
+          color: #ffffff;
+          border: none;
+          padding: 16px;
+          border-radius: 12px;
+          font-size: 16px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 12px rgba(255, 71, 87, 0.4);
+      }
+      
+      .buy-btn:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(255, 71, 87, 0.4);
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 0 48px;
+          }
+          
+          footer {
+              max-width: 768px;
+              padding: 16px 48px;
+          }
+          
+          .product-info-row {
+              padding: 40px 48px;
+          }
+          
+          .delivery-info-row {
+              padding: 40px 48px;
+          }
+          
+          .seller-profile {
+              padding: 40px 48px;
+          }
+          
+          .seller-products-row {
+              padding: 40px 48px;
+          }
+          
+          .content-row {
+              padding: 40px 48px;
+          }
+          
+          .company-info-row {
+              padding: 24px 48px;
+          }
+          
+          .menu-item {
+              padding: 24px 48px;
+          }
+          
+          .product-title {
+              font-size: 32px;
+          }
+          
+          .current-price {
+              font-size: 36px;
+          }
+          
+          .products-grid {
+              grid-template-columns: 1fr 1fr 1fr;
+          }
+          
+          .seller-stats {
+              gap: 32px;
+              padding: 24px;
+          }
+          
+          .stat-value {
+              font-size: 24px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-container">
+      <!-- Fixed Header -->
+      <header>
+          <div class="header-left">
+              <button class="back-button">
+                  <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M15.707 4.293a1 1 0 0 1 0 1.414L9.414 12l6.293 6.293a1 1 0 0 1-1.414 1.414l-7-7a1 1 0 0 1 0-1.414l7-7a1 1 0 0 1 1.414 0" clip-rule="evenodd"></path>
+                  </svg>
+              </button>
+          </div>
+          <div class="header-title">상품 상세</div>
+          <div class="header-right">
+              <button class="cart-button">
+                  <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path fill-rule="evenodd" d="M2 3a1 1 0 0 1 1-1h.768a2 2 0 0 1 1.964 1.624L6.019 5h13.652a2 2 0 0 1 1.921 2.554l-1.73 6A2 2 0 0 1 17.94 15H8.104l.212 1.017a3 3 0 1 1-1.946.464L3.772 4.023 3.768 4H3a1 1 0 0 1-1-1m5.688 10L6.436 7h13.235l-1.731 6zM7 19a1 1 0 1 1 2 0 1 1 0 0 1-2 0m9 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0m1-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6" clip-rule="evenodd"></path>
+                  </svg>
+                  <div class="cart-badge">1</div>
+              </button>
+          </div>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Product Image -->
+          <div class="product-image-row">
+              <div class="product-image-container">
+                  🥭
+                  <div class="stock-indicator">1개 남음</div>
+              </div>
+          </div>
+          
+          <!-- Row: Product Info -->
+          <div class="product-info-row">
+              <div class="flash-badge">
+                  <svg class="flash-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                  </svg>
+                  플래시 상품
+              </div>
+              
+              <h1 class="product-title">애플망고</h1>
+              
+              <div class="price-section">
+                  <div class="current-price">9,900원</div>
+                  <div class="points-info">적립 예정 포인트 19P</div>
+              </div>
+          </div>
+          
+          <!-- Row: Delivery Info -->
+          <div class="delivery-info-row">
+              <div class="info-section">
+                  <div class="info-item">
+                      <div class="info-label">배송</div>
+                      <div class="info-value strong">택배 / CJ대한통운</div>
+                  </div>
+              </div>
+              
+              <div class="info-section">
+                  <div class="info-item">
+                      <div class="info-label highlight">배송비</div>
+                      <div class="info-value">
+                          3,000원 / 30,000원 이상 무료배송<br>
+                          제주/도서산간 추가 배송비 3,000 원
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="info-section">
+                  <div class="info-item">
+                      <div class="info-label">배송출발</div>
+                      <div class="info-value">21 일 이내 배송 출발 예정 (주말/공휴일 제외)</div>
+                  </div>
+              </div>
+              
+              <div class="info-section">
+                  <div class="info-item">
+                      <div class="info-label">반품교환</div>
+                      <div class="info-value">
+                          판매자와 미리 협의하면, 진행이 원활합니다.<br>
+                          - 반품배송비 : 편도 3,000원 (최초 배송비 무료인 경우, 왕복 배송비 6,000원 부과)<br>
+                          - 교환배송비 : 6,000원
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Seller Info -->
+          <div class="seller-info-row">
+              <!-- Menu Items -->
+              <div class="seller-menu">
+                  <div class="menu-item">
+                      <span class="menu-text">A/S 안내</span>
+                      <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </div>
+                  <div class="menu-item">
+                      <span class="menu-text">배송/반품/교환 안내</span>
+                      <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </div>
+                  <div class="menu-item">
+                      <span class="menu-text">판매자 정보</span>
+                      <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M9 6l6 6-6 6"/>
+                      </svg>
+                  </div>
+              </div>
+              
+              <!-- Seller Profile -->
+              <div class="seller-profile">
+                  <div class="seller-header">
+                      <div class="seller-info">
+                          <div class="seller-avatar">
+                              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23667eea'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-size='40' font-weight='bold'%3E마%3C/text%3E%3C/svg%3E" alt="마녀옷장">
+                          </div>
+                          <div class="seller-details">
+                              <h3>마녀옷장</h3>
+                              <div class="seller-badge">
+                                  <svg class="ruby-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M12 2l3.09 6.26L22 9l-5 4.74L18.18 22 12 18.77 5.82 22 7 13.74 2 9l6.91-1.01L12 2z"/>
+                                  </svg>
+                                  루비 등급
+                              </div>
+                          </div>
+                      </div>
+                      <button class="follow-btn">팔로우</button>
+                  </div>
+                  
+                  <div class="seller-stats">
+                      <div class="stat-item">
+                          <div class="stat-value">4.9</div>
+                          <div class="stat-label">평점</div>
+                      </div>
+                      <div class="stat-item">
+                          <div class="stat-value">1.2K</div>
+                          <div class="stat-label">팔로워</div>
+                      </div>
+                      <div class="stat-item">
+                          <div class="stat-value">95%</div>
+                          <div class="stat-label">만족도</div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Seller Products -->
+          <div class="seller-products-row">
+              <h2 class="section-title">마녀옷장의 다른 상품</h2>
+              
+              <div class="products-grid">
+                  <div class="product-card">
+                      <div class="product-image">
+                          <div class="witch-logo">WITCH</div>
+                          👗
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">빈티지 플라워 원피스</div>
+                          <div class="product-price">
+                              <span class="price">45,000원</span>
+                              <span class="discount">20%</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image">
+                          <div class="witch-logo">WITCH</div>
+                          👚
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">레이스 블라우스</div>
+                          <div class="product-price">
+                              <span class="price">32,000원</span>
+                              <span class="discount">15%</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image">
+                          <div class="witch-logo">WITCH</div>
+                          👜
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">미니 크로스백</div>
+                          <div class="product-price">
+                              <span class="price">28,000원</span>
+                              <span class="discount">25%</span>
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div class="product-card">
+                      <div class="product-image">
+                          <div class="witch-logo">WITCH</div>
+                          👠
+                      </div>
+                      <div class="product-info">
+                          <div class="product-name">포인트 힐</div>
+                          <div class="product-price">
+                              <span class="price">52,000원</span>
+                              <span class="discount">30%</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: Company Info -->
+          <div class="company-info-row">
+              <div class="company-name">
+                  <span>(주)그립컴퍼니</span>
+                  <svg class="company-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M9 6l6 6-6 6"/>
+                  </svg>
+              </div>
+          </div>
+          
+          <!-- Row: Tabs -->
+          <div class="tabs-row">
+              <div class="tabs-container">
+                  <div class="tab-item active">상품정보</div>
+                  <div class="tab-item">리뷰</div>
+                  <div class="tab-item">문의</div>
+              </div>
+          </div>
+          
+          <!-- Row: Content -->
+          <div class="content-row">
+              <h2 class="section-title">상품 상세 정보</h2>
+              <div class="content-placeholder">
+                  상품 상세 이미지 및 설명이 여기에 표시됩니다
+              </div>
+          </div>
+      </main>
+      
+      <!-- Fixed Footer -->
+      <footer>
+          <button class="wishlist-btn">
+              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+          </button>
+          <button class="cart-btn">장바구니</button>
+          <button class="buy-btn">바로구매</button>
+      </footer>
+  </div>
+</body>
+</html>

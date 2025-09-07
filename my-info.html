@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>내 정보 - 그립</title>
+  <style>
+      /* ===== RESET & BASE ===== */
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+      
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Malgun Gothic', sans-serif;
+          background: #f0f0f0;
+          color: #ffffff;
+          line-height: 1.5;
+          font-size: 14px;
+          overflow-x: hidden;
+          display: flex;
+          justify-content: center;
+          min-height: 100vh;
+      }
+      
+      /* ===== LAYOUT CONTAINER ===== */
+      .app-container {
+          width: 100%;
+          max-width: 375px;
+          margin: 0 auto;
+          background: #1a1a1a;
+          min-height: 100vh;
+          position: relative;
+          box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== HEADER ===== */
+      header {
+          position: fixed;
+          top: 0;
+          width: 100%;
+          max-width: 375px;
+          background: #1a1a1a;
+          z-index: 100;
+          padding: 16px 12px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid #333333;
+      }
+      
+      .header-icon {
+          width: 24px;
+          height: 24px;
+          color: #ffffff;
+          cursor: pointer;
+          transition: all 0.2s ease;
+      }
+      
+      .header-title {
+          flex: 1;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 600;
+          color: #ffffff;
+      }
+      
+      .cart-btn {
+          position: relative;
+          width: 24px;
+          height: 24px;
+          color: #ffffff;
+          cursor: pointer;
+          transition: all 0.2s ease;
+      }
+      
+      .cart-badge {
+          position: absolute;
+          top: -6px;
+          right: -6px;
+          width: 18px;
+          height: 18px;
+          background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-weight: 700;
+          color: #ffffff;
+          box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+      }
+      
+      /* ===== MAIN CONTENT ===== */
+      main {
+          flex: 1;
+          padding-top: 60px;
+          padding-bottom: 100px;
+          display: flex;
+          flex-direction: column;
+      }
+      
+      /* ===== ROW: PROFILE ===== */
+      .profile-row {
+          padding: 32px 12px 20px;
+          background: #1a1a1a;
+      }
+      
+      .profile-info {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          margin-bottom: 16px;
+      }
+      
+      .profile-avatar {
+          width: 58px;
+          height: 58px;
+          border-radius: 50%;
+          background: #444444;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 24px;
+          color: #888888;
+          flex-shrink: 0;
+          overflow: hidden;
+      }
+      
+      .user-info {
+          flex: 1;
+      }
+      
+      .user-name {
+          font-size: 20px;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 4px;
+      }
+      
+      .user-following {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 14px;
+          color: #888888;
+      }
+      
+      .following-link {
+          color: #ff6b6b;
+          text-decoration: none;
+          font-weight: 500;
+          transition: text-decoration 0.2s ease;
+      }
+      
+      .dream-badge {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 16px;
+          background: #2a2a2a;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-bottom: 20px;
+      }
+      
+      .dream-icon {
+          width: 16px;
+          height: 16px;
+          color: #ff6b6b;
+      }
+      
+      .dream-text {
+          flex: 1;
+          font-size: 14px;
+          font-weight: 500;
+          color: #ffffff;
+      }
+      
+      .dream-arrow {
+          width: 14px;
+          height: 14px;
+          color: #888888;
+      }
+      
+      /* ===== ROW: DASHBOARD ===== */
+      .dashboard-row {
+          background: #2a2a2a;
+          border-radius: 12px;
+          padding: 24px 20px;
+          margin: 0 12px 24px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      }
+      
+      .quick-menu {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 24px;
+      }
+      
+      .quick-item {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          padding: 16px 8px;
+          text-decoration: none;
+          color: #ffffff;
+          transition: all 0.2s ease;
+      }
+      
+      .quick-icon {
+          width: 24px;
+          height: 24px;
+          color: #ffffff;
+          margin-bottom: 4px;
+      }
+      
+      .quick-label {
+          font-size: 12px;
+          color: #cccccc;
+          text-align: center;
+      }
+      
+      .quick-count {
+          font-size: 16px;
+          font-weight: 700;
+          color: #ffffff;
+      }
+      
+      .point-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px 0;
+          border-top: 1px solid #333333;
+          cursor: pointer;
+          transition: all 0.2s ease;
+      }
+      
+      .point-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+      }
+      
+      .point-icon {
+          width: 20px;
+          height: 20px;
+      }
+      
+      .point-label {
+          font-size: 16px;
+          font-weight: 600;
+          color: #ffffff;
+      }
+      
+      .point-amount {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          font-size: 18px;
+          font-weight: 700;
+          color: #ff6b6b;
+      }
+      
+      .point-arrow {
+          width: 16px;
+          height: 16px;
+          color: #888888;
+      }
+      
+      /* ===== ROW: MENU SECTIONS ===== */
+      .menu-section-row {
+          margin-bottom: 32px;
+      }
+      
+      .section-title {
+          font-size: 13px;
+          font-weight: 400;
+          color: #666666;
+          margin-bottom: 12px;
+          padding: 0 12px;
+      }
+      
+      .menu-list {
+          background: #1a1a1a;
+      }
+      
+      .menu-item {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 20px 12px;
+          border-bottom: 1px solid #2a2a2a;
+          text-decoration: none;
+          color: #ffffff;
+          transition: all 0.2s ease;
+      }
+      
+      .menu-item:last-child {
+          border-bottom: none;
+      }
+      
+      .menu-label {
+          font-size: 16px;
+          font-weight: 500;
+          color: #ffffff;
+      }
+      
+      .menu-extra {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+      }
+      
+      .menu-count {
+          font-size: 16px;
+          font-weight: 700;
+          color: #ff6b6b;
+      }
+      
+      .menu-arrow {
+          width: 16px;
+          height: 16px;
+          color: #888888;
+      }
+      
+      .no-event {
+          padding: 20px 12px;
+          text-align: center;
+          color: #666666;
+          font-size: 14px;
+      }
+      
+      /* ===== FOOTER SPACING ===== */
+      footer {
+          height: 100px;
+      }
+      
+      /* ===== 피그마용 상태 클래스 ===== */
+      .hovered {
+          color: #ff6b6b !important;
+      }
+      
+      .pressed {
+          transform: scale(0.98) !important;
+      }
+      
+      .scrolled {
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+      }
+      
+      .loading {
+          opacity: 0.6;
+          pointer-events: none;
+      }
+      
+      .disabled {
+          opacity: 0.4;
+          pointer-events: none;
+          cursor: not-allowed;
+      }
+      
+      .selected {
+          background: #333333 !important;
+      }
+      
+      .focused {
+          outline: 2px solid #ff6b6b;
+          outline-offset: 2px;
+      }
+      
+      /* ===== RESPONSIVE ADJUSTMENTS ===== */
+      @media (min-width: 768px) {
+          .app-container {
+              max-width: 768px;
+          }
+          
+          header {
+              max-width: 768px;
+              padding: 20px 48px;
+          }
+          
+          .profile-row {
+              padding: 40px 48px 24px;
+          }
+          
+          .dashboard-row {
+              margin: 0 48px 32px;
+          }
+          
+          .section-title {
+              padding: 0 48px;
+          }
+          
+          .menu-item {
+              padding: 24px 48px;
+          }
+          
+          .no-event {
+              padding: 24px 48px;
+          }
+      }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+      <!-- Fixed Header -->
+      <header>
+          <svg class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M10.439 22.5a1 1 0 0 1-.988-.843l-.391-2.465a7 7 0 0 1-1.05-.498 7 7 0 0 1-.971-.656l-2.264 1.035a1 1 0 0 1-1.286-.416l-1.55-2.732a1 1 0 0 1 .28-1.3l2.116-1.549a3 3 0 0 1-.066-.538q-.012-.301-.013-.538t.013-.538.066-.538L2.219 9.376a1 1 0 0 1-.28-1.3l1.55-2.733a1 1 0 0 1 1.286-.416l2.264 1.036q.42-.342.971-.657t1.05-.472l.392-2.49a1 1 0 0 1 .988-.844h3.121a1 1 0 0 1 .988.843l.391 2.465q.5.183 1.063.485.565.302.958.67l2.264-1.036a1 1 0 0 1 1.286.416l1.544 2.723a1 1 0 0 1-.289 1.307l-2.101 1.498q.053.262.066.565a13 13 0 0 1 0 1.115 4 4 0 0 1-.066.551l2.109 1.523a1 1 0 0 1 .284 1.304l-1.547 2.728a1 1 0 0 1-1.286.416l-2.264-1.035q-.42.34-.958.669-.538.328-1.063.485l-.391 2.465a1 1 0 0 1-.988.843zM12 15.413a3.3 3.3 0 0 0 2.415-.998A3.3 3.3 0 0 0 15.413 12a3.3 3.3 0 0 0-.998-2.415A3.3 3.3 0 0 0 12 8.587a3.3 3.3 0 0 0-2.415.998A3.3 3.3 0 0 0 8.587 12q0 1.418.998 2.415a3.3 3.3 0 0 0 2.415.998"/>
+          </svg>
+          
+          <div class="header-title"></div>
+          
+          <div class="cart-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" width="24" height="24">
+                  <path d="M18.085 22c1.29 0 2.335-1.058 2.335-2.363s-1.045-2.362-2.335-2.362-2.335 1.058-2.335 2.362S16.795 22 18.085 22M1.876 2A.88.88 0 0 0 1 2.886c0 .49.392.886.876.886h2.133L6.676 17.29a2.353 2.353 0 0 0-2.072 2.347C4.604 20.942 5.65 22 6.94 22s2.335-1.058 2.335-2.363a2.37 2.37 0 0 0-.678-1.664l-.525-2.66h9.493a2.5 2.5 0 0 0 2.42-1.874l1.73-6.678a1.5 1.5 0 0 0-1.453-1.876H6.015l-.429-2.173A.88.88 0 0 0 4.727 2z"/>
+              </svg>
+              <div class="cart-badge">1</div>
+          </div>
+      </header>
+      
+      <!-- Main Content -->
+      <main>
+          <!-- Row: Profile -->
+          <div class="profile-row">
+              <div class="profile-info">
+                  <div class="profile-avatar">👤</div>
+                  <div class="user-info">
+                      <div class="user-name">버스타는 이태훈</div>
+                      <div class="user-following">
+                          <a href="#" class="following-link">팔로잉 0</a>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="dream-badge">
+                  <svg class="dream-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <span class="dream-text">꿈나무 등급 혜택 보기</span>
+                  <svg class="dream-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M5.293 2.626a1 1 0 0 1 1.414 0l4.667 4.667a1 1 0 0 1 0 1.414l-4.667 4.667a1 1 0 0 1-1.414-1.414L9.253 8l-3.96-3.96a1 1 0 0 1 0-1.414"/>
+                  </svg>
+              </div>
+          </div>
+          
+          <!-- Row: Dashboard -->
+          <div class="dashboard-row">
+              <div class="quick-menu">
+                  <a href="#" class="quick-item">
+                      <svg class="quick-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path fill-rule="evenodd" d="M10.965 18a3.5 3.5 0 0 1-6.93 0H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v3h2.056a2 2 0 0 1 1.544.73l2.944 3.577A2 2 0 0 1 22 13.578V16a2 2 0 0 1-2 2h-.035a3.501 3.501 0 0 1-6.93 0zM4 5h9v11h-2.337a3.5 3.5 0 0 0-6.326 0H4zm11 9.337A3.5 3.5 0 0 1 19.663 16H20v-2.422L17.056 10H15zM7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M18 17.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                      </svg>
+                      <div class="quick-label">주문·배송</div>
+                      <div class="quick-count">0</div>
+                  </a>
+                  
+                  <a href="#" class="quick-item">
+                      <svg class="quick-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path fill-rule="evenodd" d="M5.828 4.6a.1.1 0 0 0-.1-.1H3.914C2.857 4.5 2 5.34 2 6.375v2.897c0 .18.099.344.246.448.72.51 1.19 1.342 1.19 2.28s-.47 1.77-1.19 2.28a.56.56 0 0 0-.246.448v2.897c0 1.035.857 1.875 1.914 1.875h1.814a.1.1 0 0 0 .1-.1v-2.319c0-.364.321-.66.717-.66.397 0 .718.296.718.66V19.4a.1.1 0 0 0 .1.1h12.723c1.057 0 1.914-.84 1.914-1.875v-2.967a.56.56 0 0 0-.23-.436A2.79 2.79 0 0 1 20.66 12c0-.903.435-1.707 1.11-2.222a.56.56 0 0 0 .23-.436V6.375c0-1.036-.857-1.875-1.914-1.875H7.363a.1.1 0 0 0-.1.1v2.366c0 .365-.321.66-.718.66s-.717-.295-.717-.66zm1.435 4.565c0-.364-.321-.66-.718-.66s-.717.296-.717.66v1.76c0 .364.321.659.717.659.397 0 .718-.295.718-.66zm0 3.958c0-.364-.321-.66-.718-.66s-.717.296-.717.66v1.76c0 .364.321.659.717.659.397 0 .718-.295.718-.66z"/>
+                      </svg>
+                      <div class="quick-label">쿠폰</div>
+                      <div class="quick-count">0</div>
+                  </a>
+                  
+                  <a href="#" class="quick-item">
+                      <svg class="quick-icon" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                          <path fill-rule="evenodd" d="M6.876 9.487A5.13 5.13 0 0 1 12 4.554a5.13 5.13 0 0 1 5.124 4.934 1.11 1.11 0 0 0-.764 1.057v4.45c0 .412.222.77.553.963a3.09 3.09 0 0 1-2.094 1.85 2.56 2.56 0 0 0-2.306-1.443h-1.026a2.566 2.566 0 0 0-2.564 2.568 2.566 2.566 0 0 0 2.564 2.567h1.026c1.077 0 2-.666 2.38-1.61a5.14 5.14 0 0 0 4.13-3.8A3.337 3.337 0 0 0 22 12.77a3.34 3.34 0 0 0-2.824-3.299C19.061 5.601 15.892 2.5 12 2.5S4.939 5.602 4.824 9.471A3.34 3.34 0 0 0 2 12.771a3.336 3.336 0 0 0 3.333 3.337H6.53c.614 0 1.111-.498 1.111-1.113v-4.45c0-.493-.32-.912-.765-1.058m-1.512 1.828a1.454 1.454 0 0 0 0 2.91h.366v-2.91zm13.272 0a1.454 1.454 0 0 1 0 2.91h-.365v-2.91zm-8.175 7.618c0-.568.46-1.027 1.026-1.027h1.026a1.026 1.026 0 0 1 0 2.054h-1.026c-.566 0-1.026-.46-1.026-1.027"/>
+                      </svg>
+                      <div class="quick-label">1:1 문의</div>
+                      <div class="quick-count">0</div>
+                  </a>
+              </div>
+              
+              <div class="point-section">
+                  <div class="point-info">
+                      <img class="point-icon" src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff6b6b'><circle cx='12' cy='12' r='10'/><text x='12' y='16' text-anchor='middle' fill='white' font-size='12' font-weight='bold'>P</text></svg>" alt="포인트">
+                      <span class="point-label">포인트</span>
+                  </div>
+                  <div class="point-amount">
+                      <span>0P</span>
+                      <svg class="point-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                          <path fill-rule="evenodd" d="M5.293 2.626a1 1 0 0 1 1.414 0l4.667 4.667a1 1 0 0 1 0 1.414l-4.667 4.667a1 1 0 0 1-1.414-1.414L9.253 8l-3.96-3.96a1 1 0 0 1 0-1.414"/>
+                      </svg>
+                  </div>
+              </div>
+          </div>
+          
+          <!-- Row: My Shopping Info -->
+          <div class="menu-section-row">
+              <h2 class="section-title">나의 쇼핑정보</h2>
+              <div class="menu-list">
+                  <a href="#" class="menu-item">
+                      <span class="menu-label">최근 본 상품 / 방송</span>
+                      <div class="menu-extra">
+                          <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="menu-item">
+                      <span class="menu-label">찜한 상품</span>
+                      <div class="menu-extra">
+                          <span class="menu-count">1</span>
+                          <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="menu-item">
+                      <span class="menu-label">배송지 관리</span>
+                      <div class="menu-extra">
+                          <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+          </div>
+          
+          <!-- Row: Event -->
+          <div class="menu-section-row">
+              <h2 class="section-title">이벤트</h2>
+              <div class="no-event">이벤트 없음</div>
+          </div>
+          
+          <!-- Row: Customer Service -->
+          <div class="menu-section-row">
+              <h2 class="section-title">고객센터</h2>
+              <div class="menu-list">
+                  <a href="#" class="menu-item">
+                      <span class="menu-label">공지사항</span>
+                      <div class="menu-extra">
+                          <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+                  
+                  <a href="#" class="menu-item">
+                      <span class="menu-label">문의사항</span>
+                      <div class="menu-extra">
+                          <svg class="menu-arrow" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M8.293 4.293a1 1 0 0 1 1.414 0l7 7a1 1 0 0 1 0 1.414l-7 7a1 1 0 0 1-1.414-1.414L14.586 12 8.293 5.707a1 1 0 0 1 0-1.414"/>
+                          </svg>
+                      </div>
+                  </a>
+              </div>
+          </div>
+      </main>
+      
+      <!-- Footer Spacing -->
+      <footer></footer>
+  </div>
+</body>
+</html>
+
