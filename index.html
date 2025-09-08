@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>사이트 메뉴</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 20px;
+    }
+    .input-area {
+      max-width: 600px;
+      margin: 0 auto 20px auto;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .input-area input[type="text"] {
+      flex: 1 1 40%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1.5px solid #a8c4f7;
+      border-radius: 6px;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+    .input-area input[type="text"]:focus {
+      border-color: #7a9eea;
+    }
+    .button {
+      background-color: #a8c4f7;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: #1a2a4a;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .button:hover {
+      background-color: #7a9eea;
+    }
+    .add-button {
+      flex: 1 1 15%;
+      min-width: 100px;
+    }
+    .reset-button {
+      background-color: #f7c8c8;
+      margin: 0 auto 20px;
+      display: block;
+      max-width: 200px;
+    }
+    .reset-button:hover {
+      background-color: #f09e9e;
+    }
+    .menu-container {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+    .menu-item {
+      background-color: #d6e6fb;
+      border: 1.5px solid #a8c4f7;
+      border-radius: 8px;
+      color: #2c3e50;
+      padding: 12px 20px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex: 1 1 45%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      cursor: grab;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .menu-item:hover {
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+    .menu-item.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+      cursor: grabbing;
+    }
+    .menu-item a {
+      color: #2c3e50;
+      text-decoration: none;
+      flex-grow: 1;
+      pointer-events: none; /* 드래그 중 링크 클릭 방지 */
+    }
+    .menu-item-clickable a {
+      pointer-events: auto; /* 드래그 끝나면 링크 클릭 가능 */
+    }
+    .menu-item a:hover {
+      text-decoration: underline;
+    }
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #b33a3a;
+      font-weight: bold;
+      font-size: 20px;
+      cursor: pointer;
+      margin-left: 15px;
+      user-select: none;
+      line-height: 1;
+      z-index: 2;
+    }
+    .delete-btn:hover {
+      color: #7a1a1a;
+    }
+    .status-message {
+      text-align: center;
+      margin: 10px 0;
+      color: #4a6fa5;
+      height: 20px;
+      font-size: 14px;
+      transition: opacity 1s ease-out;
+    }
+    @media (max-width: 600px) {
+      .menu-item {
+        flex: 1 1 100%;
+      }
+      .input-area {
+        flex-direction: column;
+        gap: 12px;
+      }
+      .input-area input[type="text"], .input-area .button {
+        flex: 1 1 100%;
+        min-width: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>사이트 메뉴</h1>
+  <div class="input-area">
+    <input type="text" id="fileNameInput" placeholder="파일 이름을 입력하세요" />
+    <input type="text" id="fileLinkInput" placeholder="파일 링크(URL)를 입력하세요" />
+    <button id="addButton" class="button add-button">추가</button>
+  </div>
+  <div id="statusMessage" class="status-message"></div>
+  <button id="resetButton" class="button reset-button">초기 메뉴로 되돌리기</button>
+  <div class="menu-container" id="menuContainer">
+    <!-- 메뉴 항목이 자바스크립트로 로드됩니다 -->
+  </div>
+
+  <script>
+    const addButton = document.getElementById('addButton');
+    const resetButton = document.getElementById('resetButton');
+    const fileNameInput = document.getElementById('fileNameInput');
+    const fileLinkInput = document.getElementById('fileLinkInput');
+    const menuContainer = document.getElementById('menuContainer');
+    const statusMessage = document.getElementById('statusMessage');
+    const STORAGE_KEY = 'siteMenuItems';
+    
+    let isDragging = false;
+    let draggedItem = null;
+
+    // 상태 메시지 표시 함수
+    function showStatus(message) {
+      statusMessage.textContent = message;
+      statusMessage.style.opacity = 1;
+      setTimeout(() => {
+        statusMessage.style.opacity = 0;
+      }, 2000);
+    }
+
+    // 상대 경로로 변환
+    function getRelativePath(url) {
+      try {
+        // 현재 위치의 origin (예: http://localhost:8000)
+        const origin = window.location.origin;
+        // URL이 현재 origin으로 시작하면 상대 경로로 변환
+        if (url.startsWith(origin)) {
+          return url.substring(origin.length);
+        }
+        // 이미 상대 경로이거나 다른 도메인 URL이면 그대로 반환
+        return url;
+      } catch (e) {
+        return url;
+      }
+    }
+
+    // 기본 메뉴 항목 배열
+    const defaultItems = [
+      { name: '팔로잉', link: 'following.html' },
+      { name: '홈 샘플', link: 'home-sample.html' },
+      { name: '내 정보', link: 'my-info.html' },
+      { name: '내 정보 (화이트 테마)', link: 'my-info-white-theme.html' },
+      { name: '주문', link: 'order.html' },
+      { name: '상품 상세', link: 'product-detail.html' },
+      { name: '상품 상세 (대체)', link: 'product-detail-alt.html' },
+      { name: '상품 목록', link: 'product-list.html' },
+      { name: '검색', link: 'search.html' },
+      { name: '검색 결과', link: 'search-results.html' },
+      { name: '검색 (화이트 테마)', link: 'search-white-theme.html' },
+      { name: '판매자', link: 'seller.html' },
+      { name: '설정', link: 'settings.html' },
+      { name: '회원가입 팝업 (다크)', link: 'signup-popup-dark.html' },
+      { name: '회원가입 팝업 (라이트)', link: 'signup-popup-light.html' }
+    ];
+
+    // 저장된 메뉴 항목 로드
+    function loadMenuItems() {
+      menuContainer.innerHTML = ''; // 기존 항목 초기화
+      
+      const savedItems = localStorage.getItem(STORAGE_KEY);
+      if (savedItems) {
+        try {
+          const items = JSON.parse(savedItems);
+          items.forEach(({ name, link }) => {
+            createMenuItem(name, link);
+          });
+          showStatus('저장된 메뉴를 불러왔습니다.');
+        } catch (e) {
+          console.error('저장된 메뉴 로드 실패:', e);
+          localStorage.removeItem(STORAGE_KEY);
+          loadDefaultItems();
+        }
+      } else {
+        loadDefaultItems();
+      }
+    }
+
+    // 기본 메뉴 항목 로드
+    function loadDefaultItems() {
+      defaultItems.forEach(({ name, link }) => {
+        createMenuItem(name, link);
+      });
+      saveMenuItems();
+      showStatus('기본 메뉴를 불러왔습니다.');
+    }
+
+    // 메뉴 항목 생성 및 DOM에 추가
+    function createMenuItem(name, link) {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'menu-item menu-item-clickable';
+      itemDiv.setAttribute('draggable', true);
+
+      const anchor = document.createElement('a');
+      anchor.href = link;
+      anchor.textContent = name;
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.setAttribute('aria-label', '삭제');
+      delBtn.textContent = '×';
+
+      // 드래그 이벤트 설정
+      itemDiv.addEventListener('dragstart', handleDragStart);
+      itemDiv.addEventListener('dragend', handleDragEnd);
+      itemDiv.addEventListener('dragover', handleDragOver);
+      itemDiv.addEventListener('dragenter', handleDragEnter);
+      itemDiv.addEventListener('dragleave', handleDragLeave);
+      itemDiv.addEventListener('drop', handleDrop);
+
+      // 삭제 버튼 클릭 이벤트
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        menuContainer.removeChild(itemDiv);
+        saveMenuItems();
+        showStatus('메뉴 항목이 삭제되었습니다.');
+      });
+
+      itemDiv.appendChild(anchor);
+      itemDiv.appendChild(delBtn);
+      menuContainer.appendChild(itemDiv);
+    }
+
+    // 드래그 앤 드롭 관련 함수들
+    function handleDragStart(e) {
+      isDragging = true;
+      draggedItem = this;
+      this.classList.add('dragging');
+      this.classList.remove('menu-item-clickable');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this.innerHTML);
+    }
+
+    function handleDragEnd(e) {
+      isDragging = false;
+      this.classList.remove('dragging');
+      setTimeout(() => {
+        this.classList.add('menu-item-clickable');
+      }, 100);
+      
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('over');
+      });
+      saveMenuItems();
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      e.dataTransfer.dropEffect = 'move';
+      return false;
+    }
+
+    function handleDragEnter(e) {
+      this.classList.add('over');
+    }
+
+    function handleDragLeave(e) {
+      this.classList.remove('over');
+    }
+
+    function handleDrop(e) {
+      e.stopPropagation();
+      if (draggedItem !== this) {
+        const allItems = Array.from(menuContainer.querySelectorAll('.menu-item'));
+        const draggedIndex = allItems.indexOf(draggedItem);
+        const targetIndex = allItems.indexOf(this);
+        
+        if (draggedIndex < targetIndex) {
+          menuContainer.insertBefore(draggedItem, this.nextSibling);
+        } else {
+          menuContainer.insertBefore(draggedItem, this);
+        }
+        showStatus('메뉴 순서가 변경되었습니다.');
+      }
+      return false;
+    }
+
+    // 현재 메뉴 항목들을 localStorage에 저장
+    function saveMenuItems() {
+      const items = [];
+      menuContainer.querySelectorAll('.menu-item').forEach(item => {
+        const anchor = item.querySelector('a');
+        items.push({
+          name: anchor.textContent,
+          link: getRelativePath(anchor.href)
+        });
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    // 새 메뉴 항목 추가 함수
+    function addMenuItem(name, link) {
+      if (!name.trim() || !link.trim()) {
+        alert('파일 이름과 링크를 모두 입력해주세요.');
+        return;
+      }
+      
+      // 링크에 http/https가 없고 .html로 끝나지 않으면 .html 추가
+      if (!/^https?:\/\//i.test(link) && !link.endsWith('.html')) {
+        link = link + '.html';
+      }
+
+      createMenuItem(name, link);
+      saveMenuItems();
+      showStatus('새 메뉴 항목이 추가되었습니다.');
+
+      fileNameInput.value = '';
+      fileLinkInput.value = '';
+      fileNameInput.focus();
+    }
+
+    // 초기화 버튼 클릭 이벤트
+    resetButton.addEventListener('click', () => {
+      if (confirm('모든 메뉴를 초기 상태로 되돌리시겠습니까?')) {
+        menuContainer.innerHTML = '';
+        loadDefaultItems();
+      }
+    });
+
+    // 추가 버튼 클릭 이벤트
+    addButton.addEventListener('click', () => {
+      addMenuItem(fileNameInput.value, fileLinkInput.value);
+    });
+
+    // 엔터키로도 추가 가능
+    [fileNameInput, fileLinkInput].forEach(input => {
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          addMenuItem(fileNameInput.value, fileLinkInput.value);
+        }
+      });
+    });
+
+    // 페이지 로드 시 메뉴 불러오기
+    document.addEventListener('DOMContentLoaded', loadMenuItems);
+    
+    // 페이지 로드 시 메뉴 불러오기 (즉시 실행)
+    loadMenuItems();
+  </script>
+</body>
+</html>
