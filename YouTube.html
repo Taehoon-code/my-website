@@ -14,33 +14,30 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #000;
-            overflow-x: hidden;
+            overflow: hidden;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 100vw;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
         
         .container {
-            width: 375px;
-            height: 667px; /* 375 * 16/9 = 666.67px */
-            margin: 20px auto;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
             position: relative;
             background: #000;
-            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             animation: containerFadeIn 1s ease-out;
         }
         
         @keyframes containerFadeIn {
             from {
                 opacity: 0;
-                transform: translateY(30px) scale(0.9);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
             }
         }
         
@@ -55,7 +52,6 @@
             width: 100%;
             height: 100%;
             border: none;
-            border-radius: 16px;
         }
         
         .overlay {
@@ -85,17 +81,23 @@
             justify-content: space-between;
             align-items: center;
             pointer-events: auto;
-            animation: slideDown 0.8s ease-out 0.3s both;
+            opacity: 0;
+            transform: translateY(-50px) scale(0.8);
+            animation: popIn 0.6s ease-out 3s both;
         }
         
-        @keyframes slideDown {
-            from {
+        @keyframes popIn {
+            0% {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-50px) scale(0.8);
             }
-            to {
+            50% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(-10px) scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
         
@@ -221,7 +223,9 @@
             pointer-events: auto;
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: slideUp 0.8s ease-out 0.5s both;
+            opacity: 0;
+            transform: translateY(100px) scale(0.8);
+            animation: bounceIn 0.8s ease-out 3s both;
             transition: all 0.3s ease;
         }
         
@@ -230,14 +234,24 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
         
-        @keyframes slideUp {
-            from {
+        @keyframes bounceIn {
+            0% {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(100px) scale(0.8);
             }
-            to {
+            50% {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(-20px) scale(1.05);
+            }
+            70% {
+                transform: translateY(10px) scale(0.98);
+            }
+            85% {
+                transform: translateY(-5px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
         
@@ -246,7 +260,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
-            animation: fadeIn 0.6s ease-out 0.8s both;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 3.3s both;
         }
         
         .product-title {
@@ -267,10 +282,10 @@
             box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
         }
         
-        @keyframes fadeIn {
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -284,7 +299,8 @@
             border-radius: 12px;
             margin-bottom: 16px;
             border-left: 4px solid #ffa726;
-            animation: fadeIn 0.6s ease-out 1s both;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 3.5s both;
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(255, 167, 38, 0.2);
         }
@@ -313,7 +329,8 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 20px;
-            animation: fadeIn 0.6s ease-out 1.1s both;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 3.7s both;
         }
         
         .price-info {
@@ -362,7 +379,8 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            animation: fadeIn 0.6s ease-out 1.2s both;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out 3.9s both;
         }
         
         .price-input {
@@ -512,18 +530,29 @@
             }
         }
         
-        /* 반응형 처리 */
-        @media (max-width: 400px) {
-            .container {
-                width: calc(100vw - 40px);
-                height: calc((100vw - 40px) * 16 / 9);
-                margin: 20px;
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .top-bar {
+                left: 15px;
+                right: 15px;
+                top: 15px;
             }
-        }
-        
-        @media (max-height: 750px) {
-            .container {
-                margin: 10px auto;
+            
+            .product-overlay {
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+            
+            .channel-info {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            .action-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
             }
         }
     </style>
